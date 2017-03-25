@@ -17,7 +17,7 @@ app.use(session({
 }))
 
 passport.use(new FitbitStrategy({
-    consumerKey: FITBIT_CONSUMER_KEY,
+    consumerKey: config.fitbit.consumerKey,
     consumerSecret: FITBIT_CONSUMER_SECRET,
     callbackURL: "http://127.0.0.1:3000/auth/fitbit/callback"
   },
