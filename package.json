@@ -19,8 +19,12 @@
   "homepage": "https://github.com/ChapmanJeff/fitbitwars#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "cors": "^2.8.1",
     "express": "^4.15.2",
     "express-session": "^1.15.1",
-    "passport-fitbit": "^1.1.0"
+    "massive": "^2.6.0",
+    "moment": "^2.18.1",
+    "passport": "^0.3.2",
+    "passport-fitbit-oauth2": "^1.0.2"
   }
 }
