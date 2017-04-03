@@ -17,16 +17,18 @@ app.use(bodyParser.json());
 app.use(session({
   secret: config.session.secret,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: false
 }))
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// const massiveInstance = massive.connectSync({connectionString: 'postgres://localhost/YOUR-DATABASE-HERE'})
-// app.set('db', massiveInstance);
-// const db = app.get('db');
+const massiveInstance = massive.connectSync({connectionString: 'postgres://dcvefcsk:gyoVRfOTinceDj0BRRK5gZtT5sFHQnxl@hard-plum.db.elephantsql.com:5432/dcvefcsk'})
+app.set('db', massiveInstance);
+const db = app.get('db');
 
+module.exports = app;
+const userCtrl = require('./api/controllers/userCtrl');
 
 passport.use(new FitbitStrategy({
     clientID: config.fitbit.clientID,
@@ -34,17 +36,21 @@ passport.use(new FitbitStrategy({
     callbackURL: "http://localhost:8000/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(111, accessToken, refreshToken, profile);
-    var fullUser = {
-      profile:profile,
-      refreshToken: refreshToken,
-      accessToken: accessToken
-    }
-    return done(null,fullUser);
-    // User.findOrCreate({ fitbitId: profile.id }, function (err, user) {
-    //   console.log(user);
-    //   return done(err, user);
-    // });
+    db.profile.findOne({user_id: profile.id}, function(err,user){
+      if (!user) {
+        userCtrl.createUser(accessToken, refreshToken, profile, done);
+      } else {
+        db.profile.save({
+          user_id: profile.id,
+          accesstoken: accessToken,
+          refreshtoken:refreshToken,
+          accesstokentimestamp: moment.utc()
+        },
+        function(err, res){
+          return done(err, res);
+        })
+      }
+    })
   }
 ));
 //base64 using Buffer for reference
@@ -55,11 +61,12 @@ passport.use(new FitbitStrategy({
 // Moment.js Add time for Refresh Keys with UTC time;
 // var a = moment().utc().add(28800,'seconds');
 // console.log(3, a);
-// passport.serializeUser(function(user, done) {
-//   return done(null, user);
-// })
 
 // OR Date.now()+28800
+
+passport.serializeUser(function(user, done) {
+  return done(null, user);
+})
 
 passport.deserializeUser(function(user, done) {
   return done(null, user);
@@ -72,18 +79,22 @@ app.get('/auth/fitbit',
 ));
 
 app.get( '/auth/fitbit/callback', passport.authenticate( 'fitbit', {
-        // successRedirect: '/auth/fitbit/success',
-        successRedirect: '/me',
+        successRedirect: '/profile',
         failureRedirect: '/auth/fitbit/failure'
 }));
 
-app.get('/me', function(req, res) {
-  res.send(req.user);
-})
+const profileCtrl = require('./api/controllers/profileCtrl');
+app.get('/profile', profileCtrl.removeTokens);
+const fitbitCtrl = require('./api/controllers/fitbitCtrl');
+app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
 app.get('/auth/logout', function(req, res) {
   req.logout();
-  res.redirect('/');
+  res.redirect('/logout');
 })
+
+// Fitbit API subscriber notifications - my IP: 
+app.get('/api/fitbit-notifications')
+app.post('/api/fitbit-notifications')
 
 app.listen(port, () => console.log(`listening on port ${port}`));
