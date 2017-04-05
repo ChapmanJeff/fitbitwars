@@ -93,8 +93,25 @@ app.get('/auth/logout', function(req, res) {
   res.redirect('/logout');
 })
 
-// Fitbit API subscriber notifications - my IP: 
-app.get('/api/fitbit-notifications')
-app.post('/api/fitbit-notifications')
+// Fitbit API subscriber notifications - my IP: http://10.0.0.34:8000/api/fitbit-notifications
+app.get('/api/fitbit-notifications', function(req, res) {
+  if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
+    res.status(204).send(req.query);
+    // console.log('success', req.query);
+  } else {
+    console.log('fail', req.query);
+    res.status(404).send(req.query);
+  }
+})
+app.post('/api/fitbit-notifications', function(req, res) {
+  // console.log(1, req);
+  // if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
+  //   res.status(204);
+  //   console.log('success', req.body);
+  // } else {
+  //   console.log('fail', req.body);
+  //   res.status(404).send('failed');
+  // }
+})
 
 app.listen(port, () => console.log(`listening on port ${port}`));
