@@ -5,7 +5,7 @@ const passport = require('passport');
 const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
-const config = require('./config')
+//const config = require('./config')
 const port = process.env.port || 8000//process.argv[2] || 8000;
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.use(session({
-  secret: process.env.sessionSecret || config.session.secret,
+  secret: process.env.sessionSecret //|| config.session.secret,
   resave: true,
   saveUninitialized: false
 }))
@@ -32,8 +32,8 @@ const userCtrl = require('./api/controllers/userCtrl');
 
 
 passport.use(new FitbitStrategy({
-    clientID: process.env.clientID || config.fitbit.clientID,
-    clientSecret: process.env.clientSecret || config.fitbit.clientSecret,
+    clientID: process.env.clientID // || config.fitbit.clientID,
+    clientSecret: process.env.clientSecret //|| config.fitbit.clientSecret,
     callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
