@@ -6,7 +6,7 @@ const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
-const port = process.argv[2] || 8000;
+const port = process.env.port //process.argv[2] || 8000;
 
 const app = express();
 
