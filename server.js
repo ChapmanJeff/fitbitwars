@@ -93,7 +93,7 @@ app.get('/auth/logout', function(req, res) {
   req.logout();
   res.redirect('/logout');
 })
-console.log(111111,'hello');
+Trace.TraceInformation(111111,'hello');
 // Fitbit API subscriber notifications - my IP: http://10.0.0.34:8000/api/fitbit-notifications
 app.get('/api/fitbit-notifications', function(req, res) {
   if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
