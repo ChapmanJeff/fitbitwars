@@ -6,7 +6,7 @@ const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
-const port = process.env.port //process.argv[2] || 8000;
+const port = process.env.port || 8000//process.argv[2] || 8000;
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.use(session({
-  secret: config.session.secret,
+  secret: process.env.sessionSecret || config.session.secret,
   resave: true,
   saveUninitialized: false
 }))
