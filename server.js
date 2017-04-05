@@ -34,7 +34,7 @@ const userCtrl = require('./api/controllers/userCtrl');
 passport.use(new FitbitStrategy({
     clientID: clientID || config.fitbit.clientID,
     clientSecret: clientSecret || config.fitbit.clientSecret,
-    callbackURL: "http://localhost:8000/auth/fitbit/callback"
+    callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     db.profile.findOne({user_id: profile.id}, function(err,user){
