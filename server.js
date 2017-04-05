@@ -5,7 +5,7 @@ const passport = require('passport');
 const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
-const config = require('./config')
+//const config = require('./config')
 const port = process.env.port || 8000;//process.argv[2] || 8000;
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.use(session({
-  secret: process.env.sessionSecret || config.session.secret,
+  secret: process.env.sessionSecret, //|| config.session.secret,
   resave: true,
   saveUninitialized: false
 }))
@@ -32,8 +32,8 @@ const userCtrl = require('./api/controllers/userCtrl');
 
 
 passport.use(new FitbitStrategy({
-    clientID: process.env.clientID || config.fitbit.clientID,
-    clientSecret: process.env.clientSecret || config.fitbit.clientSecret,
+    clientID: process.env.clientID, // || config.fitbit.clientID,
+    clientSecret: process.env.clientSecret, //|| config.fitbit.clientSecret,
     callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
@@ -93,7 +93,8 @@ app.get('/auth/logout', function(req, res) {
   req.logout();
   res.redirect('/logout');
 })
-//Trace.TraceInformation(111111,'hello');
+console.log(2222,"Hi");
+Trace.TraceInformation(111111,'hello');
 // Fitbit API subscriber notifications - my IP: http://10.0.0.34:8000/api/fitbit-notifications
 app.get('/api/fitbit-notifications', function(req, res) {
   if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
