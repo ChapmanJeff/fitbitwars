@@ -30,9 +30,10 @@ const db = app.get('db');
 module.exports = app;
 const userCtrl = require('./api/controllers/userCtrl');
 
+
 passport.use(new FitbitStrategy({
-    clientID: config.fitbit.clientID,
-    clientSecret: config.fitbit.clientSecret,
+    clientID: clientID || config.fitbit.clientID,
+    clientSecret: clientSecret || config.fitbit.clientSecret,
     callbackURL: "http://localhost:8000/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
