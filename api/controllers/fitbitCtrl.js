@@ -11,7 +11,6 @@ module.exports = {
         var distanceArr = response.summary.distances;
         var totalDistanceCalc = function(response){
           for (var i = 0; i < distanceArr.length; i++) {
-            console.log(distanceArr[i])
             if (distanceArr[i].activity === "total") {
               return distanceArr[i].distance;
             }
@@ -37,8 +36,8 @@ module.exports = {
           date: date
         }, function(err, res) {
           console.log(1, err,2, res);
+          res.send(res);
         })
-        res.send(response);
       })
 
   },
