@@ -18,7 +18,7 @@ module.exports = {
                res.reject(new Error(err));
            } else {
               console.log(11111,body);
-              dfd.resolve(body.goals);
+              dfd.resolve(body.summary);
            }
        });
 
