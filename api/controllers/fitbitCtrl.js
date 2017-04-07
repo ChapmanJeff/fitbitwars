@@ -7,14 +7,17 @@ module.exports = {
   getDailyActivity: function (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
       .then(function(response) {
-        console.log(00, response);
+        console.log(0101, response);
+        var distanceArr = response.summary.distances;
+        console.log('distance arr ',distanceArr )
         var totalDistanceCalc = function(response){
-          for (var i = 0; i < response.summary.distances.length; i++) {
-            if (response.summary.distances[i].activity === "total") {
-              return response.summary.distances[i].distance;
+          for (var i = 0; i < distanceArr.length; i++) {
+            console.log(distanceArr[i])
+            if (distanceArr[i].activity === "total") {
+              return distanceArr[i].distance;
             }
           }
-        };
+        }
         var totalDistance = totalDistanceCalc();
         console.log('totalDistance ', totalDistance);
 
