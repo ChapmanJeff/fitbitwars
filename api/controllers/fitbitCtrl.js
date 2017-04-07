@@ -1,7 +1,7 @@
 const fitbitService = require('../services/fitbitService');
 var app = require('../../server.js');
 var db = app.get('db');
-
+console.log(999, app)
 module.exports = {
 
   getDailyActivity: function (req, res) {
@@ -19,7 +19,7 @@ module.exports = {
         var totalDistance = totalDistanceCalc();
         var date = "2017-04-05"
         console.log('totalDistance ', totalDistance, date);
-        res.send(response);
+
         db.activitySummary.insert({
           user_id: req.user.user_id,
           goal_activeMinutes: response.goal.activeMinutes,
@@ -38,6 +38,8 @@ module.exports = {
           console.log(1, err,2, res);
           res.send(res);
         })
+
+        res.send(response);
       })
 
   },
