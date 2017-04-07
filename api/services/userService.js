@@ -4,7 +4,7 @@ const q = require('q');
 
 module.exports = {
 
-  createSubscription: function(req, res) {
+  createSubscription: function(req, res, profile) {
     var dfd = q.defer();
 
     request({
