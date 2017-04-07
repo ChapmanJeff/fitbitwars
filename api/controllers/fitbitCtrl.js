@@ -35,6 +35,8 @@ module.exports = {
           summary_steps: response.summary.steps,
           summary_sedentaryMinutes: response.summary.sedentaryMinutes,
           date: date
+        }, function(err, res) {
+          console.log(1, err,2, res);
         })
         res.send(response);
       })
