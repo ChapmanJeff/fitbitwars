@@ -4,7 +4,8 @@ const q = require('q');
 module.exports = {
 
   getDailyActivity: function (user_id, accesstoken) {
-    console.log(112233, collectionType, date, ownerId, user_id, accesstoken);
+    console.log(112233, user_id, accesstoken);
+    var date = "2017-04-05"
     var dfd = q.defer();
     request({
            method: 'GET',

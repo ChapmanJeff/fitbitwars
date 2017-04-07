@@ -4,7 +4,7 @@ var db = app.get('db');
 
 module.exports = {
 
-  getDailyActivity: function (req, res, collectionType, date, ownerId) {
+  getDailyActivity: function (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
       .then(function(response) {
         console.log(00, response);
