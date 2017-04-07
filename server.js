@@ -79,7 +79,7 @@ app.get('/auth/fitbit',
   { scope: ['activity','heartrate','location','profile','social', 'settings', 'sleep', 'weight', 'nutrition'] }
 ));
 
-app.get( '/auth/fitbit/callback', passport.authenticate( 'fitbit', {
+app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
         successRedirect: '/profile',
         failureRedirect: '/auth/fitbit/failure'
 }));

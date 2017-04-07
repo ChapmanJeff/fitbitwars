@@ -30,6 +30,7 @@ module.exports = {
       return done(err, user)
     })
 
+// Create Fitbit Subscription for User
     userService.createSubscription(profile, accessToken)
       .then(function(response) {
         console.log('Subscription Response', response);

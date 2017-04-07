@@ -13,6 +13,7 @@ module.exports = {
            url: `https://api.fitbit.com/1/user/${user_id}/activities/date/${date}.json`
        }, function(err, res, body) {
            if (err) {
+             console.log(err);
                res.reject(new Error(err));
            } else {
               console.log(11111,body);
