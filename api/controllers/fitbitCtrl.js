@@ -19,7 +19,7 @@ module.exports = {
         var totalDistance = totalDistanceCalc();
         var date = "2017-04-05"
         console.log('totalDistance ', totalDistance, date);
-
+        res.send(response);
         db.activitySummary.insert({
           user_id: req.user.user_id,
           goal_activeMinutes: response.goal.activeMinutes,
