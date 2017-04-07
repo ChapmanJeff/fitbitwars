@@ -15,9 +15,8 @@ module.exports = {
            if (err) {
                res.reject(new Error(err));
            } else {
-
-             console.log(11111,body);
-               dfd.resolve(body);
+              console.log(11111,body);
+              dfd.resolve(body);
            }
        });
 

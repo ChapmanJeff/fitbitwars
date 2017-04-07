@@ -5,7 +5,7 @@ const passport = require('passport');
 const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
-//const config = require('./config')
+const config = require('./config')
 const port = process.env.port || 8000;//process.argv[2] || 8000;
 
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.use(session({
-  secret: process.env.sessionSecret|| config.session.secret,
+  secret: process.env.sessionSecret || config.session.secret,
   resave: true,
   saveUninitialized: false
 }))
@@ -93,8 +93,9 @@ app.get('/auth/logout', function(req, res) {
   req.logout();
   res.redirect('/logout');
 })
+
 console.log(2222,"Hi");
-// Fitbit API subscriber notifications - my IP: http://10.0.0.34:8000/api/fitbit-notifications
+// Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', function(req, res) {
   if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
     res.status(204).send(req.query);
@@ -105,7 +106,9 @@ app.get('/api/fitbit-notifications', function(req, res) {
   }
 })
 app.post('/api/fitbit-notifications', function(req, res) {
-  // console.log(1, req);
+  res.status(204);
+  console.log(1, req);
+
   // if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
   //   res.status(204);
   //   console.log('success', req.body);

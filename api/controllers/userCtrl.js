@@ -1,6 +1,7 @@
 const moment = require('moment');
 var app = require('../../server.js');
 var db = app.get('db');
+const userService = require('../services/userService')
 
 module.exports = {
 
@@ -26,7 +27,13 @@ module.exports = {
     }, function(err, user){
       console.log(222, 'createUser ', user, err);
       return done(err, user)
-    })
+    });
+
+    userService.createSubscription(profile)
+      .then(function(response) {
+        console.log('Subscription Response', response);
+        // db.subscription.insert()
+      })
   }
 
 }
