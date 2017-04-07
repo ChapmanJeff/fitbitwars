@@ -7,9 +7,8 @@ module.exports = {
   getDailyActivity: function (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
       .then(function(response) {
-        console.log(0101, response);
+
         var distanceArr = response.summary.distances;
-        console.log('distance arr ',distanceArr )
         var totalDistanceCalc = function(response){
           for (var i = 0; i < distanceArr.length; i++) {
             console.log(distanceArr[i])
@@ -19,7 +18,8 @@ module.exports = {
           }
         }
         var totalDistance = totalDistanceCalc();
-        console.log('totalDistance ', totalDistance);
+        var date = "2017-04-05"
+        console.log('totalDistance ', totalDistance, date);
 
         db.activitySummary.insert({
           user_id: req.user.user_id,
