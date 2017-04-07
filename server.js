@@ -14,11 +14,11 @@ app.use(express.static('public'));
 
 app.use(bodyParser.json());
 
-app.use(session({
-  secret: process.env.sessionSecret || config.session.secret,
-  resave: true,
-  saveUninitialized: false
-}))
+// app.use(session({
+//   secret: process.env.sessionSecret || config.session.secret,
+//   resave: true,
+//   saveUninitialized: false
+// }))
 
 app.use(passport.initialize());
 app.use(passport.session());

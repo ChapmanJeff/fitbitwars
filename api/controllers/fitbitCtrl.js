@@ -12,7 +12,7 @@ module.exports = {
         var totalDistanceCalc = function(response){
           for (var i = 0; i < distanceArr.length; i++) {
             if (distanceArr[i].activity === "total") {
-              return distanceArr[i].distance;
+              return distanceArr[i].distance * 0.621371;// km to miles conversion
             }
           }
         }
