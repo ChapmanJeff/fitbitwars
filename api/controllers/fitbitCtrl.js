@@ -1,14 +1,52 @@
 const fitbitService = require('../services/fitbitService');
+var app = require('../../server.js');
+var db = app.get('db');
 
 module.exports = {
 
-  getDailyActivity: function (req, res) {
+  getDailyActivity: function (req, res, collectionType, date, ownerId) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
       .then(function(response) {
         console.log(00, response);
         res.send(response);
       })
 
+  },
+
+  updateDailyActivity: function(nofitArr) {
+    for (var i = 0; i < nofitArr.length; i++) {
+      var user = db.profile.findOne({user_id: ownerId}, function(err, user){
+        return user;
+        console.log(0000,'this is the user ', user);
+      var date = nofitArr[i].date;
+      var ownerId = nofitArr[i].ownerId;
+      var accesstoken = user.accesstoken
+      var collectionType = nofitArr[i].collectionType;
+
+      fitbitService.updateDailyActivity(date, ownerId, accesstoken, collectionType)
+        .then(function(response) {
+          var activitySummaryId = db.run("select id from activitySummary where date Like %date% AND user_id Like %userID%", function(err, res) {
+            if (err || res.length > 1) {
+              console.log('Error: ',err, 'Result: ',res)
+            } else {
+              console.log('204 Result: ', res);
+              return res[0].id;
+            }
+          })
+
+          if (activitySummaryId) {
+            db.activitySummary.save({
+              id: activitySummaryId,
+              . . .
+            })
+          } else {
+            db.activitySummary.save({
+              user_id: ,
+              . . .
+            })
+          }
+        })
+    }
   }
 
 }

@@ -107,8 +107,8 @@ app.get('/api/fitbit-notifications', function(req, res) {
 })
 app.post('/api/fitbit-notifications', function(req, res) {
   res.status(204);
-  console.log(1, req);
-
+  console.log(1,'Notif ', req.body);
+  fitbitCtrl.updateDailyActivity(req.body);
   // if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
   //   res.status(204);
   //   console.log('success', req.body);
