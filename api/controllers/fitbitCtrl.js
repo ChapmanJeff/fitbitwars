@@ -19,7 +19,7 @@ module.exports = {
         var totalDistance = totalDistanceCalc();
         var date = "2017-04-05"
         console.log('activeminutes ',response.goals.activeMinutes,'summarminutes ',response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes );
-
+        var toSend ='';
         db.activitySummary.insert({
           user_id: req.user.user_id,
           goal_activeMinutes: response.goals.activeMinutes,
@@ -36,10 +36,10 @@ module.exports = {
           date: date
         }, function(err, res) {
           console.log(1, err,2, res);
-          res.send(res);
+          toSend = res;
         })
 
-        res.send(response);
+        res.send(toSend);
       })
 
   },
