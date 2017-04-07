@@ -9,7 +9,7 @@ module.exports = {
     var dfd = q.defer();
     request({
            method: 'GET',
-           headers: {Authorization: `Bearer ${accesstoken}`},
+           headers: {Authorization: `Bearer ${accesstoken}`, Accept-Locale: 'en_US'},
            json: true,
            url: `https://api.fitbit.com/1/user/${user_id}/activities/date/${date}.json`
        }, function(err, res, body) {
