@@ -20,7 +20,7 @@ console.log('profile',profile);
                dfd.resolve(body);
            }
        })
-
+//testing
 
     return dfd.promise;
   }

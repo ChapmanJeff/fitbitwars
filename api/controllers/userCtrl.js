@@ -6,6 +6,7 @@ const userService = require('../services/userService')
 module.exports = {
 
   createUser: function(accessToken, refreshToken, profile, done) {
+    console.log('im here',122112);
     db.profile.insert({
       user_id: profile.id ,
     	refreshtoken: refreshToken ,
