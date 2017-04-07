@@ -18,15 +18,15 @@ module.exports = {
         }
         var totalDistance = totalDistanceCalc();
         var date = "2017-04-05"
-        console.log('activeminutes ',response.goal.activeMinutes,'summarminutes ',response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes );
+        console.log('activeminutes ',response.goals.activeMinutes,'summarminutes ',response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes );
 
         db.activitySummary.insert({
           user_id: req.user.user_id,
-          goal_activeMinutes: response.goal.activeMinutes,
-          goal_caloriesOut: response.goal.caloriesOut,
-          goal_distance: response.goal.distance,
-          goal_floors: response.goal.floors,
-          goal_steps: response.goal.steps,
+          goal_activeMinutes: response.goals.activeMinutes,
+          goal_caloriesOut: response.goals.caloriesOut,
+          goal_distance: response.goals.distance,
+          goal_floors: response.goals.floors,
+          goal_steps: response.goals.steps,
           summary_activeMinutes: response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes,
           summary_caloriesOut: response.summary.caloriesOut,
           summary_distance: totalDistance,
