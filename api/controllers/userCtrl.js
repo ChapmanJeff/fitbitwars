@@ -30,7 +30,7 @@ module.exports = {
       return done(err, user)
     })
 
-    userService.createSubscription(profile)
+    userService.createSubscription(profile, accessToken)
       .then(function(response) {
         console.log('Subscription Response', response);
         // db.subscription.insert()

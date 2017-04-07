@@ -4,12 +4,12 @@ const q = require('q');
 
 module.exports = {
 
-  createSubscription: function(profile) {
+  createSubscription: function(profile, accesstoken) {
     var dfd = q.defer();
 console.log('profile',profile);
     request({
            method: 'POST',
-          //  headers: {Authorization: `Bearer ${accesstoken}`},
+           headers: {Authorization: `Bearer ${accesstoken}`},
            json: true,
            url: `https://api.fitbit.com/1/user/-/activities/apiSubscriptions/${profile.id}.json`
        }, function(err, res, body) {
