@@ -1,7 +1,7 @@
 const fitbitService = require('../services/fitbitService');
 var app = require('../../server.js');
 var db = app.get('db');
-console.log(999, app)
+console.log(999, db)
 module.exports = {
 
   getDailyActivity: function (req, res) {
