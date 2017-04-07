@@ -33,19 +33,19 @@ module.exports = {
     userService.createSubscription(profile, accessToken)
       .then(function(response) {
         console.log('Subscription Response', response);
-        // db.subscription.insert({
-        //   collectionType: response.collectionType,
-        //   ownerId: response.ownerId,
-        //   ownerType: response.ownerType,
-        //   subscriberId: response.subscriberId,
-        //   subscriptionId: response.subscriptionId
-        // }, function(err, res){
-        //   if (err) {
-        //     console.log(err);
-        //   } else {
-        //     console.log(888,res);
-        //   }
-        // })
+        db.subscription.insert({
+          collectionType: response.collectionType,
+          ownerId: response.ownerId,
+          ownerType: response.ownerType,
+          subscriberId: response.subscriberId,
+          subscriptionId: response.subscriptionId
+        }, function(err, res){
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(888,res);
+          }
+        })
       })
   }
 

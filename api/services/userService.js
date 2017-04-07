@@ -8,7 +8,7 @@ module.exports = {
     var dfd = q.defer();
 console.log('profile',profile);
     request({
-           method: 'DELETE',
+           method: 'POST',
            headers: {Authorization: `Bearer ${accesstoken}`},
            json: true,
            url: `https://api.fitbit.com/1/user/-/activities/apiSubscriptions/${profile.id}.json`
