@@ -27,7 +27,7 @@ module.exports = {
     }, function(err, user){
       console.log(222, 'createUser ', user, err);
       return done(err, user)
-    });
+    })
 
     userService.createSubscription(profile)
       .then(function(response) {

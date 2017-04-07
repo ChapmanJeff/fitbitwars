@@ -6,7 +6,7 @@ module.exports = {
 
   createSubscription: function(req, res, profile) {
     var dfd = q.defer();
-
+console.log('profile',profile);
     request({
            method: 'POST',
           //  headers: {Authorization: `Bearer ${accesstoken}`},
