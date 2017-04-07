@@ -29,7 +29,7 @@ module.exports = {
           goal_steps: response.goals.steps,
           summary_activeMinutes: response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes,
           summary_caloriesOut: response.summary.caloriesOut,
-          summary_distance: totalDistance,
+          summary_totalDistance: totalDistance,
           summary_floors: response.summary.floors,
           summary_steps: response.summary.steps,
           summary_sedentaryMinutes: response.summary.sedentaryMinutes,
