@@ -42,6 +42,32 @@ module.exports = {
       })
 
   },
+
+  updateDailyActivity: function(notifArr) {
+    for (var i = 0; i < notifArr.length; i++) {
+      var date = notifArr[i].date;
+      var user_id = notifArr[i].ownerId;
+      var daySumExistsArr = sqlService.checkExistingDay(date, user_id);
+      var accesstoken = daySumExists.accesstoken || sqlService.getAccessToken(user_id);
+        fitbitService.getDailyActivity(user_id, accesstoken, date)
+          .then(function(fitResponse) {
+
+          })
+      if (daySumExists.length > 0) {
+        fitbitService.getDailyActivity(user_id, daySumExists.accesstoken, date)
+          .then(function(fitResponse) {
+            sqlService.updateActivitySummary(fitResponse, daySumExists.id, date)
+              .then(function(sqlResponse){
+                return sqlResponse;
+              })
+          })
+        } else {
+
+        }
+      } //End of FOR Loop
+
+    }, //End of Function
+  }
 //select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
 //select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'
 //   updateDailyActivity: function(nofitArr) {
@@ -112,4 +138,4 @@ module.exports = {
 //
 //   }
 //
-}
+// }
