@@ -36,10 +36,9 @@ module.exports = {
           date: date
         }, function(err, res) {
           console.log(1, err,2, res);
-          toSend = res;
+          toSend = res; //STILL HAS USER_ID ON IT! TAKE IT OFF!
         })
-
-        res.send(toSend);
+        res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
       })
 
   },

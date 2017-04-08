@@ -97,7 +97,7 @@ app.get('/auth/logout', function(req, res) {
 console.log(2222,"Hi");
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', function(req, res) {
-  if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
+  if (req.query.verify === process.env.verifyQuery) {
     res.status(204).send(req.query);
     console.log('success', req.query);
   } else {
