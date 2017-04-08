@@ -117,5 +117,12 @@ app.post('/api/fitbit-notifications', function(req, res) {
   //   res.status(404).send('failed');
   // }
 })
+//
+// db.run("select accesstoken from profile where user_id = $1", ["3QWD5T"], function(err, res) {
+// console.log(4, err, 5, res[0].accesstoken);
+// })
+// db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2", ["2017-04-05","3QWD5T"], function(err, res) {
+// console.log(4, err, 5, res);
+// })
 
 app.listen(port, () => console.log(`listening on port ${port}`));

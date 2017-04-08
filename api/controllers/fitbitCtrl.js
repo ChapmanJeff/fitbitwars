@@ -7,7 +7,7 @@ module.exports = {
   getDailyActivity: function (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
       .then(function(response) {
-
+        // sqlService.saveActivitySummary().then
         var distanceArr = response.summary.distances;
         var totalDistanceCalc = function(response){
           for (var i = 0; i < distanceArr.length; i++) {
@@ -20,7 +20,7 @@ module.exports = {
         var date = "2017-04-05"
         console.log('activeminutes ',response.goals.activeMinutes,'summarminutes ',response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes );
         var toSend ='';
-        db.activitySummary.insert({
+        db.activity_summary.insert({
           user_id: req.user.user_id,
           goal_activeMinutes: response.goals.activeMinutes,
           goal_caloriesOut: response.goals.caloriesOut,
@@ -34,15 +34,16 @@ module.exports = {
           summary_steps: response.summary.steps,
           summary_sedentaryMinutes: response.summary.sedentaryMinutes,
           date: date
-        }, function(err, res) {
-          console.log(1, err,2, res);
-          toSend = res; //STILL HAS USER_ID ON IT! TAKE IT OFF!
+        }, function(dbErr, dbRes) {
+          console.log(1, dbErr,2, dbRes);
+          toSend = dbRes; //STILL HAS USER_ID ON IT! TAKE IT OFF!
+          res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
         })
-        res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
       })
 
   },
-
+//select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
+//select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'
 //   updateDailyActivity: function(nofitArr) {
 //     for (var i = 0; i < nofitArr.length; i++) {
 //       var user = db.profile.findOne({user_id: ownerId}, function(err, user){
@@ -55,7 +56,7 @@ module.exports = {
 //
 //       fitbitService.updateDailyActivity(date, ownerId, accesstoken, collectionType)
 //         .then(function(response) {
-//           var activitySummaryId = db.run("select id from activitySummary where date Like %date% AND user_id Like %userID%", function(err, res) {
+//           var activitySummaryId = db.activity_summary.where("id=$1 AND id=$2",["2017-04-05","3QWD5T"], function(err, res) {
 //             if (err || res.length > 1) {
 //               console.log('Error: ',err, 'Result: ',res)
 //             } else {
