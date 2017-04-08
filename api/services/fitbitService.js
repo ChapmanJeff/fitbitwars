@@ -1,6 +1,7 @@
 const request = require('request');
 const q = require('q');
 const moment = require('moment');
+const sqlService = require('./sqlService')
 
 module.exports = {
 
@@ -40,7 +41,7 @@ module.exports = {
              console.log(332211,err);
                res.reject(new Error(err));
            } else {
-              console.log(11111,body);
+              console.log(220022,body);
               dfd.resolve(body);
            }
        });

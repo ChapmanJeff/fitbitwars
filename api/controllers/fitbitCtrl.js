@@ -1,6 +1,8 @@
 const fitbitService = require('../services/fitbitService');
 var app = require('../../server.js');
 var db = app.get('db');
+const sqlService = require('../services/sqlService')
+const q = require('q');
 
 module.exports = {
 
@@ -44,33 +46,39 @@ module.exports = {
   },
 
   updateDailyActivity: function(notifArr) {
-    notifArr.map()
-    for (var i = 0; i < notifArr.length; i++) {
-      var date = notifArr[i].date;
-      var user_id = notifArr[i].ownerId;
-      var daySumExists = sqlService.checkExistingDay(date, user_id);
-      var accesstoken = daySumExists.accesstoken || sqlService.getAccessToken(user_id);
-
-      fitbitService.getDailyActivity(user_id, accesstoken, date)
+    var allUpdates = notifArr.map(function(notif){
+      // for (var i = 0; i < notifArr.length; i++) {
+      var date = notif.date;
+      var user_id = notif.ownerId;
+      var daySumExists = ()=>sqlService.checkExistingDay(date, user_id).then((daySumResponse)=> daySumResponse);
+      var accesstoken = ()=>sqlService.getAccessToken(user_id).then((accessTResponse)=>accessTResponse.accesstoken);
+      var dfd = q.defer();
+      q.all([daySumExists(), accesstoken()]).then(function(response){console.log(111111111111111111,response);
+        fitbitService.getDailyActivity(user_id, response[1], date)
         .then(function(fitResponse) {
-          if (daySumExists) {
+          if (response[5]) {
+            console.log(222222222222222222)
             sqlService.updateActivitySummary(fitResponse, daySumExists.id, date)
             .then(function(sqlResponse){
               console.log('sqlResponse', sqlResponse);
-              return sqlResponse;
+              dfd.resolve(sqlResponse);
             })
           } else {
+            console.log(33333333333)
             sqlService.insertDailySummary(fitResponse)
-              .then(function(sqlResponse) {
-                console.log('sqlResponse', sqlResponse);
-                return sqlResponse
-              })
+            .then(function(sqlResponse) {
+              console.log('sqlResponse', sqlResponse);
+              dfd.resolve(sqlResponse);
+            })
           }
         })
-      } //End of FOR Loop
-
-    }, //End of Function
-  }
+      })
+      return dfd.promise;
+      // } //End of FOR Loop
+    }) // End of Map
+    return q.all(allUpdates);
+  }, //End of Function
+}
 //select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
 //select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'
 //   updateDailyActivity: function(nofitArr) {
