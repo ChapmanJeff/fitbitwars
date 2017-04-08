@@ -6,30 +6,34 @@ const q = require('q');
 module.exports = {
 
   getAccessToken: function(user_id) {
+    var dfd = q.defer();
     db.run("select accesstoken from profile where user_id = $1",[user_id],
       function(err, res) {
         if (err) {
           console.log(err)
-          return err;
+          res.reject(new Error(err));
         } else {
           console.log('get access token',res)
-          return res[0];
+          dfd.resolve(res[0]);
         }
       })
+    return dfd.promise;
   },
 
   checkExistingDay: function(date, user_id) {
+    var dfd = q.defer();
     db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2",
       [date,user_id],
       function(err, res) {
         if (err) {
           console.log(err)
-          return err;
+          dfd.resolve(null);
         } else {
           console.log('checkExistingDay', res)
-          return res[0];
+          dfd.resolve(res[0]);
         }
     });
+    return dfd.promise;
   },
 
   updateActivitySummary: function(response, id, date){
@@ -66,7 +70,7 @@ module.exports = {
       })
 
     return dfd.promise;
-  }
+  },
 
   insertDailySummary: function(response, date) {
     var dfd = q.defer();

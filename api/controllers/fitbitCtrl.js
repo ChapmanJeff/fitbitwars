@@ -44,26 +44,29 @@ module.exports = {
   },
 
   updateDailyActivity: function(notifArr) {
+    notifArr.map()
     for (var i = 0; i < notifArr.length; i++) {
       var date = notifArr[i].date;
       var user_id = notifArr[i].ownerId;
-      var daySumExistsArr = sqlService.checkExistingDay(date, user_id);
+      var daySumExists = sqlService.checkExistingDay(date, user_id);
       var accesstoken = daySumExists.accesstoken || sqlService.getAccessToken(user_id);
-        fitbitService.getDailyActivity(user_id, accesstoken, date)
-          .then(function(fitResponse) {
 
-          })
-      if (daySumExists.length > 0) {
-        fitbitService.getDailyActivity(user_id, daySumExists.accesstoken, date)
-          .then(function(fitResponse) {
+      fitbitService.getDailyActivity(user_id, accesstoken, date)
+        .then(function(fitResponse) {
+          if (daySumExists) {
             sqlService.updateActivitySummary(fitResponse, daySumExists.id, date)
-              .then(function(sqlResponse){
-                return sqlResponse;
+            .then(function(sqlResponse){
+              console.log('sqlResponse', sqlResponse);
+              return sqlResponse;
+            })
+          } else {
+            sqlService.insertDailySummary(fitResponse)
+              .then(function(sqlResponse) {
+                console.log('sqlResponse', sqlResponse);
+                return sqlResponse
               })
-          })
-        } else {
-
-        }
+          }
+        })
       } //End of FOR Loop
 
     }, //End of Function
