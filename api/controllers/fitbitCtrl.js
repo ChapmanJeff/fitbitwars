@@ -53,19 +53,19 @@ module.exports = {
       var daySumExists = ()=>sqlService.checkExistingDay(date, user_id).then((daySumResponse)=> daySumResponse);
       var accesstoken = ()=>sqlService.getAccessToken(user_id).then((accessTResponse)=>accessTResponse.accesstoken);
       var dfd = q.defer();
-      q.all([daySumExists(), accesstoken()]).then(function(response){console.log(111111111111111111,response);
-        fitbitService.getDailyActivity(user_id, response[1], date)
+      q.all([daySumExists(), accesstoken()]).then(function(qAllResponse){console.log(111111111111111111,qAllResponse);
+        fitbitService.getDailyActivity(user_id, qAllResponse[1], date)
         .then(function(fitResponse) {
-          if (response[5]) {
-            console.log(222222222222222222)
-            sqlService.updateActivitySummary(fitResponse, daySumExists.id, date)
+          if (qAllResponse[0]) {
+            console.log(222222222222222222, qAllResponse[0])
+            sqlService.updateActivitySummary(fitResponse, qAllResponse[0].id, date)
             .then(function(sqlResponse){
               console.log('sqlResponse', sqlResponse);
               dfd.resolve(sqlResponse);
             })
           } else {
             console.log(33333333333)
-            sqlService.insertDailySummary(fitResponse)
+            sqlService.insertDailySummary(fitResponse, user_id, date)
             .then(function(sqlResponse) {
               console.log('sqlResponse', sqlResponse);
               dfd.resolve(sqlResponse);
@@ -77,7 +77,7 @@ module.exports = {
       // } //End of FOR Loop
     }) // End of Map
     return q.all(allUpdates);
-  }, //End of Function
+  } //End of Function
 }
 //select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
 //select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'

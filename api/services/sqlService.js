@@ -36,72 +36,79 @@ module.exports = {
     return dfd.promise;
   },
 
-  updateActivitySummary: function(response, id, date){
+  updateActivitySummary: function(fitResponse, id, date){
     var dfd = q.defer();
-      var distanceArr = response.summary.distances;
-      var totalDistanceCalc = function(response){
+      var distanceArr = fitResponse.summary.distances;
+      var totalDistanceCalc = function(distanceArr){
         for (var i = 0; i < distanceArr.length; i++) {
           if (distanceArr[i].activity === "total") {
             return distanceArr[i].distance * 0.621371;// km to miles conversion
           }
         }
       }
-      var totalDistance = totalDistanceCalc();
+      var totalDistance = totalDistanceCalc(distanceArr);
+      console.log('UPDATE SUM BEFORE SAVE',id, date, totalDistance, fitResponse.goals.activeMinutes, fitResponse.summary.floors )
 
       db.activity_summary.save({
         id: id,
-        user_id: req.user.user_id,
-        goal_activeMinutes: response.goals.activeMinutes,
-        goal_caloriesOut: response.goals.caloriesOut,
-        goal_distance: response.goals.distance,
-        goal_floors: response.goals.floors,
-        goal_steps: response.goals.steps,
-        summary_activeMinutes: response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes,
-        summary_caloriesOut: response.summary.caloriesOut,
+        goal_activeMinutes: fitResponse.goals.activeMinutes,
+        goal_caloriesOut: fitResponse.goals.caloriesOut,
+        goal_distance: fitResponse.goals.distance,
+        goal_floors: fitResponse.goals.floors,
+        goal_steps: fitResponse.goals.steps,
+        summary_activeMinutes: fitResponse.summary.veryActiveMinutes + fitResponse.summary.fairlyActiveMinutes,
+        summary_caloriesOut: fitResponse.summary.caloriesOut,
         summary_totalDistance: totalDistance,
-        summary_floors: response.summary.floors,
-        summary_steps: response.summary.steps,
-        summary_sedentaryMinutes: response.summary.sedentaryMinutes,
+        summary_floors: fitResponse.summary.floors,
+        summary_steps: fitResponse.summary.steps,
+        summary_sedentaryMinutes: fitResponse.summary.sedentaryMinutes,
         date: date
       }, function(dbErr, dbRes) {
-        console.log(1, dbErr,2, dbRes);
-        toSend = dbRes; //STILL HAS USER_ID ON IT! TAKE IT OFF!
-        res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
+        if (dbErr) {
+          console.log('dbErr UPDATE',dbErr)
+          dfd.reject(new Error(dbErr))
+        } else {
+          console.log('dbRes UPDATE',dbRes)
+          dfd.resolve(dbRes);
+        }
       })
-
     return dfd.promise;
   },
 
-  insertDailySummary: function(response, date) {
+  insertDailySummary: function(fitResponse, user_id, date) {
     var dfd = q.defer();
-      var distanceArr = response.summary.distances;
-      var totalDistanceCalc = function(response){
+      var distanceArr = fitResponse.summary.distances;
+      var totalDistanceCalc = function(distanceArr){
         for (var i = 0; i < distanceArr.length; i++) {
           if (distanceArr[i].activity === "total") {
             return distanceArr[i].distance * 0.621371;// km to miles conversion
           }
         }
       }
-      var totalDistance = totalDistanceCalc();
+      var totalDistance = totalDistanceCalc(distanceArr);
 
       db.activity_summary.save({
-        user_id: response.user_id,
-        goal_activeMinutes: response.goals.activeMinutes,
-        goal_caloriesOut: response.goals.caloriesOut,
-        goal_distance: response.goals.distance,
-        goal_floors: response.goals.floors,
-        goal_steps: response.goals.steps,
-        summary_activeMinutes: response.summary.veryActiveMinutes + response.summary.fairlyActiveMinutes,
-        summary_caloriesOut: response.summary.caloriesOut,
+        user_id: user_id,
+        goal_activeMinutes: fitResponse.goals.activeMinutes,
+        goal_caloriesOut: fitResponse.goals.caloriesOut,
+        goal_distance: fitResponse.goals.distance,
+        goal_floors: fitResponse.goals.floors,
+        goal_steps: fitResponse.goals.steps,
+        summary_activeMinutes: fitResponse.summary.veryActiveMinutes + fitResponse.summary.fairlyActiveMinutes,
+        summary_caloriesOut: fitResponse.summary.caloriesOut,
         summary_totalDistance: totalDistance,
-        summary_floors: response.summary.floors,
-        summary_steps: response.summary.steps,
-        summary_sedentaryMinutes: response.summary.sedentaryMinutes,
+        summary_floors: fitResponse.summary.floors,
+        summary_steps: fitResponse.summary.steps,
+        summary_sedentaryMinutes: fitResponse.summary.sedentaryMinutes,
         date: date
       }, function(dbErr, dbRes) {
-        console.log(1, dbErr,2, dbRes);
-        toSend = dbRes; //STILL HAS USER_ID ON IT! TAKE IT OFF!
-        res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
+        if (dbErr) {
+          console.log('dbErr INSERT',dbErr)
+          dfd.reject(new Error(dbErr))
+        } else {
+          console.log('dbRes INSERT',dbRes)
+          dfd.resolve(dbRes);
+        }
       })
 
     return dfd.promise;
