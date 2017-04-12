@@ -6,7 +6,7 @@ const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
-const port = process.env.port || 8000;//process.argv[2] || 8000;
+const port = process.env.port || 8000;
 
 const app = express();
 
@@ -45,7 +45,7 @@ passport.use(new FitbitStrategy({
           user_id: profile.id,
           accesstoken: accessToken,
           refreshtoken:refreshToken,
-          accesstokentimestamp: moment.utc()
+          accesstokentimestamp: moment.utc().format()
         },
         function(err, res){
           return done(err, res);
@@ -94,7 +94,7 @@ app.get('/auth/logout', function(req, res) {
   res.redirect('/logout');
 })
 
-console.log(2222,"Hi");
+
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', function(req, res) {
   if (req.query.verify === process.env.verifyQuery) {
@@ -111,6 +111,7 @@ app.post('/api/fitbit-notifications', function(req, res) {
   fitbitCtrl.updateDailyActivity(req.body).then(function(response) {
     console.log('THE ANSWER',response);
   });
+})
   // if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
   //   res.status(204);
   //   console.log('success', req.body);
@@ -118,15 +119,25 @@ app.post('/api/fitbit-notifications', function(req, res) {
   //   console.log('fail', req.body);
   //   res.status(404).send('failed');
   // }
-})
 //
 // db.run("select accesstoken from profile where user_id = $1", ["3QWD5T"], function(err, res) {
 // console.log(4, err, 5, res[0].accesstoken);
 // })
-var date = "2017-04-05";
-var id= "3QWD5T";
-db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2", [date,id], function(err, res) {
-console.log(4, err, 5,res);
-})
+
+
+// var date = "2017-04-05";
+// var id= "3QWD5T";
+// db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2", [date,id], function(err, res) {
+// console.log(4, err, 5,res);
+// })
+
+setInterval(()=>{
+console.log("UPDATING Access Tokens")
+  db.run("select * from profile", function(dbErr, profilesArr){
+    fitbitCtrl.updateAccessTokens(profilesArr).then(function(response) {
+      console.log('FINISHED UPDATING TOKENS', response);
+    })
+  })
+}, 2700000) //2700000 ms = 45min 60000 = 1min
 
 app.listen(port, () => console.log(`listening on port ${port}`));

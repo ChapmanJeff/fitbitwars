@@ -3,6 +3,7 @@ var app = require('../../server.js');
 var db = app.get('db');
 const sqlService = require('../services/sqlService')
 const q = require('q');
+const moment = require('moment')
 
 module.exports = {
 
@@ -77,7 +78,28 @@ module.exports = {
       // } //End of FOR Loop
     }) // End of Map
     return q.all(allUpdates);
-  } //End of Function
+  }, //End of Function
+
+  updateAccessTokens: function(profilesArr) {
+    var dfd = q.defer();
+      var updatedAccessTokens = function() {
+        profilesArr.map(function(profile){
+          if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().add(8, 'hours').format()) {
+            console.log('True')
+            fitbitService.updateAccessCodes(profile).then(function(updatedRes){
+              sqlService.updateTokens(updatedRes).then(function(sqlRes){
+                dfd.resolve(sqlRes);
+              })
+            })
+          }else {
+            console.log('Expires at: ', moment(profile.accesstokentimestamp).utc().add(8, 'hours').format());
+            dfd.resolve(moment(profile.accesstokentimestamp).utc().utc().add(8, 'hours').format());
+          }
+        });
+    }
+    q.all(updatedAccessTokens()).then(function(qAllRes){ dfd.resolve(qAllRes)});
+    return dfd.promise;
+  }
 }
 //select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
 //select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'

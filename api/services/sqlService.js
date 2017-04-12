@@ -2,6 +2,7 @@ const app = require('../../server.js');
 const db = app.get('db');
 const request = require('request');
 const q = require('q');
+const moment = require('moment');
 
 module.exports = {
 
@@ -111,6 +112,27 @@ module.exports = {
         }
       })
 
+    return dfd.promise;
+  },
+
+  updateTokens: function(newData) {
+    var dfd = q.defer();
+
+    db.profile.save({
+      user_id: newData.user_id,
+      refreshtoken: newData.refresh_token,
+      accesstoken: newData.access_token,
+      accesstokentimestamp: moment.utc().format()
+    }, function(dbErr, dbRes) {
+      if (dbErr) {
+        console.log('dbErr UPDATE TOKEN',dbErr)
+        dfd.reject(new Error(dbErr))
+      } else {
+        console.log('dbRes UPDATED TOKEN',dbRes)
+        dfd.resolve(dbRes);
+      }
+    })
+    
     return dfd.promise;
   }
 

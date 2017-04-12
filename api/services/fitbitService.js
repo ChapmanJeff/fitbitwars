@@ -1,4 +1,5 @@
 const request = require('request');
+const config = require('../../config')
 const q = require('q');
 const moment = require('moment');
 const sqlService = require('./sqlService')
@@ -48,6 +49,41 @@ module.exports = {
 
     return dfd.promise;
 
+  },
+  //base64 using Buffer for reference
+  // var a = Buffer.from("HelloWOrld", "ascii");
+  // console.log(a);
+  // console.log(1111, a.toString('base64'))
+  updateAccessCodes : function(profile) {
+    var dfd = q.defer();
+    var clientID = process.env.clientID || config.fitbit.clientID;
+    var clientSecret = process.env.clientSecret || config.fitbit.clientSecret;
+    var buffFrom = Buffer.from(`${clientID}:${clientSecret}`, 'ascii')
+    var base64Encoded = buffFrom.toString('base64');
+
+      request({
+             method: 'POST',
+             headers: {
+               Authorization: `Basic ${base64Encoded}`,
+               'Content-Type': 'application/x-www-form-urlencoded'
+             },
+             form: {
+               grant_type: 'refresh_token',
+               refresh_token: profile.refreshtoken
+             },
+             json: true,
+             url: `https://api.fitbit.com/oauth2/token`
+         }, function(err, res, body) {
+           if (err) {
+             console.log(332211,err);
+               dfd.reject(new Error(err));
+           } else {
+              console.log(220022,body);
+              dfd.resolve(body);
+           }
+       });
+
+    return dfd.promise;
   }
 
 }
