@@ -37,7 +37,7 @@ passport.use(new FitbitStrategy({
     callbackURL: 'http://localhost:8000/auth/fitbit/callback'
     //callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
-  function(accessToken, refreshToken, profile, done) {
+  (accessToken, refreshToken, profile, done) => {
     db.profile.findOne({user_id: profile.id}, function(err,user){
       if (!user) {
         userCtrl.createUser(accessToken, refreshToken, profile, done);
@@ -48,9 +48,7 @@ passport.use(new FitbitStrategy({
           refreshtoken:refreshToken,
           accesstokentimestamp: moment.utc().format()
         },
-        function(err, res){
-          return done(err, res);
-        })
+        (err, res)=> done(err, res))
       }
     })
   }
@@ -66,11 +64,11 @@ passport.use(new FitbitStrategy({
 
 // OR Date.now()+28800
 
-passport.serializeUser(function(user, done) {
-  return done(null, user.user_id);
-})
+passport.serializeUser((user, done)=>
+  done(null, user.user_id)
+)
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser((user, done) => {
   db.profile.findOne({user_id: user}, (err, user)=>{
     return done(null, user);
   })
@@ -93,14 +91,14 @@ app.get('/profile', profileCtrl.removeTokens);
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
-app.get('/auth/logout', function(req, res) {
+app.get('/auth/logout', (req, res) => {
   req.logout();
   res.redirect('/logout');
 })
 
 
 // Fitbit API subscriber notifications
-app.get('/api/fitbit-notifications', function(req, res) {
+app.get('/api/fitbit-notifications', (req, res) => {
   if (req.query.verify === process.env.verifyQuery) {
     res.status(204).send(req.query);
     console.log('success', req.query);
@@ -109,10 +107,10 @@ app.get('/api/fitbit-notifications', function(req, res) {
     res.status(404).send(req.query);
   }
 })
-app.post('/api/fitbit-notifications', function(req, res) {
+app.post('/api/fitbit-notifications', (req, res) => {
   res.status(204).send();
   console.log(1,'Notif ', req.body);
-  fitbitCtrl.updateDailyActivity(req.body).then(function(response) {
+  fitbitCtrl.updateDailyActivity(req.body).then((response) => {
     console.log('THE ANSWER',response);
   });
 })
@@ -136,10 +134,10 @@ app.post('/api/fitbit-notifications', function(req, res) {
 // })
 function updateTokens () {
   console.log("UPDATING Access Tokens")
-  db.run("select * from profile", function(dbErr, profilesArr){
-    fitbitCtrl.updateAccessTokens(profilesArr).then(function(response) {
-      console.log('FINISHED UPDATING TOKENS', response);
-    })
+  db.run("select * from profile", (dbErr, profilesArr)=> {
+    fitbitCtrl.updateAccessTokens(profilesArr).then((response) =>
+      console.log('FINISHED UPDATING TOKENS', response)
+    )
   })
 }
 setInterval(updateTokens, 2700000) //2700000 ms = 45min 60000 = 1min
