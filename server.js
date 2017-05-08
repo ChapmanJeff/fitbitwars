@@ -34,7 +34,8 @@ const userCtrl = require('./api/controllers/userCtrl');
 passport.use(new FitbitStrategy({
     clientID: process.env.clientID || config.fitbit.clientID,
     clientSecret: process.env.clientSecret || config.fitbit.clientSecret,
-    callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
+    callbackURL: 'http://localhost:8000/auth/fitbit/callback'
+    //callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     db.profile.findOne({user_id: profile.id}, function(err,user){
@@ -66,11 +67,13 @@ passport.use(new FitbitStrategy({
 // OR Date.now()+28800
 
 passport.serializeUser(function(user, done) {
-  return done(null, user);
+  return done(null, user.user_id);
 })
 
 passport.deserializeUser(function(user, done) {
-  return done(null, user);
+  db.profile.findOne({user_id: user}, (err, user)=>{
+    return done(null, user);
+  })
 })
 
 
@@ -86,6 +89,7 @@ app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
 
 const profileCtrl = require('./api/controllers/profileCtrl');
 app.get('/profile', profileCtrl.removeTokens);
+
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
@@ -130,14 +134,14 @@ app.post('/api/fitbit-notifications', function(req, res) {
 // db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2", [date,id], function(err, res) {
 // console.log(4, err, 5,res);
 // })
-
-setInterval(()=>{
-console.log("UPDATING Access Tokens")
+function updateTokens () {
+  console.log("UPDATING Access Tokens")
   db.run("select * from profile", function(dbErr, profilesArr){
     fitbitCtrl.updateAccessTokens(profilesArr).then(function(response) {
       console.log('FINISHED UPDATING TOKENS', response);
     })
   })
-}, 2700000) //2700000 ms = 45min 60000 = 1min
+}
+setInterval(updateTokens, 2700000) //2700000 ms = 45min 60000 = 1min
 
 app.listen(port, () => console.log(`listening on port ${port}`));

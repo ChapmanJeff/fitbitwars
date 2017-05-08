@@ -7,8 +7,9 @@ const moment = require('moment')
 
 module.exports = {
 
+// FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY
   getDailyActivity: function (req, res) {
-    fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken)
+    fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken, '2017-05-01')
       .then(function(response) {
         // sqlService.saveActivitySummary().then
         var distanceArr = response.summary.distances;
@@ -84,8 +85,8 @@ module.exports = {
     var dfd = q.defer();
       var updatedAccessTokens = function() {
         profilesArr.map(function(profile){
-          if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().add(8, 'hours').format()) {
-            console.log('True')
+          if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().format()) {
+            console.log('True') //FOR TESTING USE < moment.utc().add(8, 'hours').format()
             fitbitService.updateAccessCodes(profile).then(function(updatedRes){
               sqlService.updateTokens(updatedRes).then(function(sqlRes){
                 dfd.resolve(sqlRes);
