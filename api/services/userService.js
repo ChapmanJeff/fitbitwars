@@ -4,7 +4,7 @@ const q = require('q');
 
 module.exports = {
 
-  createSubscription: function(profile, accesstoken) {
+  createSubscription: (profile, accesstoken) => {
     var dfd = q.defer();
 console.log('profile',profile);
     request({
@@ -12,7 +12,7 @@ console.log('profile',profile);
            headers: {Authorization: `Bearer ${accesstoken}`},
            json: true,
            url: `https://api.fitbit.com/1/user/-/activities/apiSubscriptions/${profile.id}.json`
-       }, function(err, res, body) {
+       }, (err, res, body) => {
            if (err) {
                res.reject(new Error(err));
            } else {

@@ -6,7 +6,7 @@ const sqlService = require('./sqlService')
 
 module.exports = {
 
-  getDailyActivity: function (user_id, accesstoken, date) {
+  getDailyActivity: (user_id, accesstoken, date) => {
     var formatDate = moment(date).format('YYYY-MM-DD');
     console.log(112233, user_id, accesstoken, formatDate);
     var dfd = q.defer();
@@ -15,7 +15,7 @@ module.exports = {
            headers: {Authorization: `Bearer ${accesstoken}`},
            json: true,
            url: `https://api.fitbit.com/1/user/${user_id}/activities/date/${formatDate}.json`
-       }, function(err, res, body) {
+       }, (err, res, body) => {
            if (err) {
              console.log(332211,err);
                res.reject(new Error(err));
@@ -30,14 +30,14 @@ module.exports = {
 
   },
 
-  updateDailyActivity: function(date, ownerId, accesstoken, collectionType){
+  updateDailyActivity: (date, ownerId, accesstoken, collectionType) => {
     var dfd = q.defer();
     request({
            method: 'GET',
            headers: {Authorization: `Bearer ${accesstoken}`},
            json: true,
            url: `https://api.fitbit.com/1/user/${ownerId}/${collectionType}/date/${date}.json`
-       }, function(err, res, body) {
+       }, (err, res, body) => {
            if (err) {
              console.log(332211,err);
                res.reject(new Error(err));
@@ -54,7 +54,7 @@ module.exports = {
   // var a = Buffer.from("HelloWOrld", "ascii");
   // console.log(a);
   // console.log(1111, a.toString('base64'))
-  updateAccessCodes : function(profile) {
+  updateAccessCodes : (profile) => {
     var dfd = q.defer();
     var clientID = process.env.clientID || config.fitbit.clientID;
     var clientSecret = process.env.clientSecret || config.fitbit.clientSecret;
@@ -73,7 +73,7 @@ module.exports = {
              },
              json: true,
              url: `https://api.fitbit.com/oauth2/token`
-         }, function(err, res, body) {
+         }, (err, res, body) => {
            if (err) {
              console.log(332211,err);
                dfd.reject(new Error(err));

@@ -6,10 +6,10 @@ const moment = require('moment');
 
 module.exports = {
 
-  getAccessToken: function(user_id) {
+  getAccessToken: (user_id) => {
     var dfd = q.defer();
     db.run("select accesstoken from profile where user_id = $1",[user_id],
-      function(err, res) {
+      (err, res) => {
         if (err) {
           console.log(err)
           res.reject(new Error(err));
@@ -21,11 +21,11 @@ module.exports = {
     return dfd.promise;
   },
 
-  checkExistingDay: function(date, user_id) {
+  checkExistingDay: (date, user_id) => {
     var dfd = q.defer();
     db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2",
       [date,user_id],
-      function(err, res) {
+      (err, res) => {
         if (err) {
           console.log(err)
           dfd.resolve(null);
@@ -37,10 +37,10 @@ module.exports = {
     return dfd.promise;
   },
 
-  updateActivitySummary: function(fitResponse, id, date){
+  updateActivitySummary: (fitResponse, id, date) => {
     var dfd = q.defer();
       var distanceArr = fitResponse.summary.distances;
-      var totalDistanceCalc = function(distanceArr){
+      var totalDistanceCalc = (distanceArr) => {
         for (var i = 0; i < distanceArr.length; i++) {
           if (distanceArr[i].activity === "total") {
             return distanceArr[i].distance * 0.621371;// km to miles conversion
@@ -64,7 +64,7 @@ module.exports = {
         summary_steps: fitResponse.summary.steps,
         summary_sedentaryMinutes: fitResponse.summary.sedentaryMinutes,
         date: date
-      }, function(dbErr, dbRes) {
+      }, (dbErr, dbRes) => {
         if (dbErr) {
           console.log('dbErr UPDATE',dbErr)
           dfd.reject(new Error(dbErr))
@@ -76,10 +76,10 @@ module.exports = {
     return dfd.promise;
   },
 
-  insertDailySummary: function(fitResponse, user_id, date) {
+  insertDailySummary: (fitResponse, user_id, date) => {
     var dfd = q.defer();
       var distanceArr = fitResponse.summary.distances;
-      var totalDistanceCalc = function(distanceArr){
+      var totalDistanceCalc = (distanceArr) => {
         for (var i = 0; i < distanceArr.length; i++) {
           if (distanceArr[i].activity === "total") {
             return distanceArr[i].distance * 0.621371;// km to miles conversion
@@ -102,7 +102,7 @@ module.exports = {
         summary_steps: fitResponse.summary.steps,
         summary_sedentaryMinutes: fitResponse.summary.sedentaryMinutes,
         date: date
-      }, function(dbErr, dbRes) {
+      }, (dbErr, dbRes) => {
         if (dbErr) {
           console.log('dbErr INSERT',dbErr)
           dfd.reject(new Error(dbErr))
@@ -115,7 +115,7 @@ module.exports = {
     return dfd.promise;
   },
 
-  updateTokens: function(newData) {
+  updateTokens: (newData) => {
     var dfd = q.defer();
 
     db.profile.save({
@@ -123,7 +123,7 @@ module.exports = {
       refreshtoken: newData.refresh_token,
       accesstoken: newData.access_token,
       accesstokentimestamp: moment.utc().format()
-    }, function(dbErr, dbRes) {
+    }, (dbErr, dbRes) => {
       if (dbErr) {
         console.log('dbErr UPDATE TOKEN',dbErr)
         dfd.reject(new Error(dbErr))
@@ -132,7 +132,7 @@ module.exports = {
         dfd.resolve(dbRes);
       }
     })
-    
+
     return dfd.promise;
   }
 
