@@ -8,12 +8,12 @@ const moment = require('moment')
 module.exports = {
 
 // FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY
-  getDailyActivity: function (req, res) {
+  getDailyActivity: (req, res) => {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken, '2017-05-01')
-      .then(function(response) {
+      .then((response) => {
         // sqlService.saveActivitySummary().then
         var distanceArr = response.summary.distances;
-        var totalDistanceCalc = function(response){
+        var totalDistanceCalc = (response) => {
           for (var i = 0; i < distanceArr.length; i++) {
             if (distanceArr[i].activity === "total") {
               return distanceArr[i].distance * 0.621371;// km to miles conversion
@@ -38,7 +38,7 @@ module.exports = {
           summary_steps: response.summary.steps,
           summary_sedentaryMinutes: response.summary.sedentaryMinutes,
           date: date
-        }, function(dbErr, dbRes) {
+        }, (dbErr, dbRes) => {
           console.log(1, dbErr,2, dbRes);
           toSend = dbRes; //STILL HAS USER_ID ON IT! TAKE IT OFF!
           res.send(toSend); //DOESNT SEND BUT DATA is getting to database.
@@ -47,28 +47,29 @@ module.exports = {
 
   },
 
-  updateDailyActivity: function(notifArr) {
-    var allUpdates = notifArr.map(function(notif){
+  updateDailyActivity: (notifArr) => {
+    var allUpdates = notifArr.map((notif) => {
       // for (var i = 0; i < notifArr.length; i++) {
       var date = notif.date;
       var user_id = notif.ownerId;
       var daySumExists = ()=>sqlService.checkExistingDay(date, user_id).then((daySumResponse)=> daySumResponse);
       var accesstoken = ()=>sqlService.getAccessToken(user_id).then((accessTResponse)=>accessTResponse.accesstoken);
       var dfd = q.defer();
-      q.all([daySumExists(), accesstoken()]).then(function(qAllResponse){console.log(111111111111111111,qAllResponse);
+      q.all([daySumExists(), accesstoken()]).then((qAllResponse)=>{
+        console.log(111111111111111111,qAllResponse);
         fitbitService.getDailyActivity(user_id, qAllResponse[1], date)
-        .then(function(fitResponse) {
+        .then((fitResponse) => {
           if (qAllResponse[0]) {
             console.log(222222222222222222, qAllResponse[0])
             sqlService.updateActivitySummary(fitResponse, qAllResponse[0].id, date)
-            .then(function(sqlResponse){
+            .then((sqlResponse)=> {
               console.log('sqlResponse', sqlResponse);
               dfd.resolve(sqlResponse);
             })
           } else {
             console.log(33333333333)
             sqlService.insertDailySummary(fitResponse, user_id, date)
-            .then(function(sqlResponse) {
+            .then((sqlResponse) => {
               console.log('sqlResponse', sqlResponse);
               dfd.resolve(sqlResponse);
             })
@@ -81,14 +82,14 @@ module.exports = {
     return q.all(allUpdates);
   }, //End of Function
 
-  updateAccessTokens: function(profilesArr) {
+  updateAccessTokens: (profilesArr) => {
     var dfd = q.defer();
-      var updatedAccessTokens = function() {
-        profilesArr.map(function(profile){
+      var updatedAccessTokens = () => {
+        profilesArr.map((profile) => {
           if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().format()) {
             console.log('True') //FOR TESTING USE < moment.utc().add(8, 'hours').format()
-            fitbitService.updateAccessCodes(profile).then(function(updatedRes){
-              sqlService.updateTokens(updatedRes).then(function(sqlRes){
+            fitbitService.updateAccessCodes(profile).then((updatedRes) => {
+              sqlService.updateTokens(updatedRes).then((sqlRes) => {
                 dfd.resolve(sqlRes);
               })
             })
@@ -98,7 +99,7 @@ module.exports = {
           }
         });
     }
-    q.all(updatedAccessTokens()).then(function(qAllRes){ dfd.resolve(qAllRes)});
+    q.all(updatedAccessTokens()).then((qAllRes) => { dfd.resolve(qAllRes)});
     return dfd.promise;
   }
 }
