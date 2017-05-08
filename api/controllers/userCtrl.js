@@ -5,7 +5,7 @@ const userService = require('../services/userService')
 
 module.exports = {
 
-  createUser: function(accessToken, refreshToken, profile, done) {
+  createUser: (accessToken, refreshToken, profile, done) => {
     console.log('im here',122112);
     db.profile.insert({
       user_id: profile.id ,
@@ -25,14 +25,14 @@ module.exports = {
     	timezone: profile._json.user.timezone,
     	offsetfromutcmillis:	profile._json.user.offsetFromUTCMillis,
     	locale: profile._json.user.locale
-    }, function(err, user){
+    }, (err, user) => {
       console.log(222, 'createUser ', user, err);
       return done(err, user)
     })
 
 // Create Fitbit Subscription for User
     userService.createSubscription(profile, accessToken)
-      .then(function(response) {
+      .then((response) => {
         console.log('Subscription Response', response);
         db.subscription.insert({
           collectionType: response.collectionType,
@@ -40,7 +40,7 @@ module.exports = {
           ownerType: response.ownerType,
           subscriberId: response.subscriberId,
           subscriptionId: response.subscriptionId
-        }, function(err, res){
+        }, (err, res) => {
           if (err) {
             console.log(err);
           } else {
