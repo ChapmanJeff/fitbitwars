@@ -2,7 +2,6 @@ const config = require('../../config')
 const keySecret = config.stripe.keySecret;
 const keyPublishable = config.stripe.keyPublishable;
 const stripe = require('stripe')(keySecret)
-const stripeService = require('../services/stripeService')
 const sqlService = require('../services/sqlService')
 
 
