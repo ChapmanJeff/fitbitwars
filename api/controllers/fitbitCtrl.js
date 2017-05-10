@@ -7,7 +7,7 @@ const moment = require('moment')
 
 module.exports = {
 
-// FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY
+// FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY VIA SUBSCRIPTIONS
   getDailyActivity (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken, '2017-05-01')
       .then((response) => {
@@ -98,79 +98,8 @@ module.exports = {
             dfd.resolve(moment(profile.accesstokentimestamp).utc().utc().add(8, 'hours').format());
           }
         });
-    }
-    q.all(updatedAccessTokens()).then((qAllRes) => { dfd.resolve(qAllRes)});
+      }
+      q.all(updatedAccessTokens()).then((qAllRes) => { dfd.resolve(qAllRes)});
     return dfd.promise;
   }
 }
-//select * from activity_summary where date = '2017-04-05' AND user_id = '3QWD5T'
-//select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = '2017-04-05' AND p.user_id= '3QWD5T'
-//   updateDailyActivity: function(nofitArr) {
-//     for (var i = 0; i < nofitArr.length; i++) {
-//       var user = db.profile.findOne({user_id: ownerId}, function(err, user){
-//         return user;
-//         console.log(0000,'this is the user ', user);
-//       var date = nofitArr[i].date;
-//       var ownerId = nofitArr[i].ownerId;
-//       var accesstoken = user.accesstoken
-//       var collectionType = nofitArr[i].collectionType;
-//
-//       fitbitService.updateDailyActivity(date, ownerId, accesstoken, collectionType)
-//         .then(function(response) {
-//           var activitySummaryId = db.activity_summary.where("id=$1 AND id=$2",["2017-04-05","3QWD5T"], function(err, res) {
-//             if (err || res.length > 1) {
-//               console.log('Error: ',err, 'Result: ',res)
-//             } else {
-//               console.log('204 Result: ', res);
-//               return res[0].id;
-//             }
-//           })
-//
-//           if (activitySummaryId) {
-//             db.activitySummary.save({
-//               id: activitySummaryId,
-//               . . .
-//             })
-//           } else {
-//             db.activitySummary.save({
-//               user_id: ,
-//               . . .
-//             })
-//           }
-//         })
-//     }
-//   }
-//
-// }
-
-
-// const request = require('request');
-// const q = require('q');
-//
-// module.exports = {
-//
-//   getDailyActivity: function (req, res) {
-//     var dfd = q.defer();
-//     var date = '2017-03-01';
-//     console.log(req.user.user_id, req.user.accesstoken)
-//     request({
-//            method: 'GET',
-//            headers: {Authorization: `Bearer ${req.user.accesstoken}`},
-//            json: true,
-//            url: `https://api.fitbit.com/1/user/${req.user.user_id}/activities/date/${date}.json`
-//        }, function(err, res, body) {
-//            if (err) {
-//                res.reject(new Error(err));
-//            } else {
-//
-//              console.log(11111,body);
-//                dfd.resolve(body);
-//            }
-//        });
-//
-//     return dfd.promise;
-//
-//
-//   }
-//
-// }

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {getProfile} from '../utils/api'
+import TakeMoney from './StripeCheckout'
 
 class Profile extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class Profile extends Component {
   render() {
     return(
       <div>
+        <TakeMoney />
         {this.state.profile}
       </div>
     )

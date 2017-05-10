@@ -36,7 +36,6 @@ class TakeMoney extends Component {
     this.state= {
 
     }
-
   }
 
   onToken (token) {
@@ -46,7 +45,6 @@ class TakeMoney extends Component {
       console.log(token)
         alert(`We are in business, ${token.token.email}`)
       })
-
   }
 
 
@@ -58,7 +56,7 @@ class TakeMoney extends Component {
        panelLabel="Save Info"
        name="Fitbit Wars"
        description="Save your stripe info so you can join battles"
-       image='http://www.moa.zcu.cz/hcewiki/images/Fitbit.png'
+       image='./app/images/fitbit.png'
        zipCode={true}
        locale="auto"
        billingAddress={true}

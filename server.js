@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const session = require('express-session');
 const passport = require('passport');
 const massive = require('massive');
-// const cors = require('cors')
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
@@ -11,15 +10,11 @@ const port = process.env.port || 8000;
 
 const app = express();
 
+
+//********* MIDDLEWARE **********//
 app.use(express.static('public'));
 
 app.use(bodyParser.json());
-
-// var corsOptions = {
-//   origin: 'http://localhost:8080',
-//   optionsSuccessStatus: 200
-// }
-// app.use(cors(corsOptions));
 
 app.use(session({
   secret: process.env.sessionSecret || config.session.secret,
@@ -30,6 +25,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+//********* CONNECT DB **********//
 const massiveInstance = massive.connectSync({connectionString: 'postgres://dcvefcsk:gyoVRfOTinceDj0BRRK5gZtT5sFHQnxl@hard-plum.db.elephantsql.com:5432/dcvefcsk'})
 app.set('db', massiveInstance);
 const db = app.get('db');
@@ -37,10 +34,8 @@ const db = app.get('db');
 module.exports = app;
 const userCtrl = require('./api/controllers/userCtrl');
 
-// const stripe = require('./api/services/stripeService')
-// stripe.test()
 
-
+//*********** PASSPORT AUTHENTICATION ************//
 passport.use(new FitbitStrategy({
     clientID: process.env.clientID || config.fitbit.clientID,
     clientSecret: process.env.clientSecret || config.fitbit.clientSecret,
@@ -63,17 +58,8 @@ passport.use(new FitbitStrategy({
     })
   }
 ));
-//base64 using Buffer for reference
-// var a = Buffer.from("HelloWOrld", "ascii");
-// console.log(a);
-// console.log(1111, a.toString('base64'))
 
-// Moment.js Add time for Refresh Keys with UTC time;
-// var a = moment().utc().add(28800,'seconds');
-// console.log(3, a);
-
-// OR Date.now()+28800
-
+//Session Info
 passport.serializeUser((user, done)=>
   done(null, user.user_id)
 )
@@ -83,7 +69,6 @@ passport.deserializeUser((user, done) => {
     return done(null, user);
   })
 })
-
 
 app.get('/auth/fitbit',
   passport.authenticate('fitbit',
@@ -95,17 +80,26 @@ app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
         failureRedirect: '/auth/fitbit/failure'
 }));
 
-const profileCtrl = require('./api/controllers/profileCtrl');
-app.get('/api/profile', profileCtrl.removeTokens);
 
-const fitbitCtrl = require('./api/controllers/fitbitCtrl');
-app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
+//***** APP ENDPOINTS *****//
+app.get('/api/isLoggedIn', (req,res)=>
+  {if (req.user) {
+    res.send({loggedIn:true})
+  } res.send({loggedIn:false})
+})
 
 app.get('/auth/logout', (req, res) => {
   req.logout();
   res.redirect('http://localhost:8080');
 })
 
+const profileCtrl = require('./api/controllers/profileCtrl');
+app.get('/api/profile', profileCtrl.removeTokens);
+
+
+//******* FITBIT ENDPOINTS **********//
+const fitbitCtrl = require('./api/controllers/fitbitCtrl');
+app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', (req, res) => {
@@ -124,6 +118,46 @@ app.post('/api/fitbit-notifications', (req, res) => {
     console.log('THE ANSWER',response);
   });
 })
+
+// Access Tokens only last 8 hrs. This runs every 45 min to update them
+function updateTokens () {
+  console.log("UPDATING Access Tokens")
+  db.run("select * from profile", (dbErr, profilesArr)=> {
+    fitbitCtrl.updateAccessTokens(profilesArr).then((response) =>
+      console.log('FINISHED UPDATING TOKENS', response)
+    )
+  })
+}
+setInterval(updateTokens, 2700000) //2700000 ms = 45min 60000 = 1min
+
+
+//********* Stripe Endpoints **********//
+const stripeController = require('./api/controllers/stripeController');
+app.post('/api/stripeToken', stripeController.createCustomer)
+
+//To Test Charges uncomment below:
+// stripeController.chargeCustomer("3QWD5T", 1000, "This is a test")
+
+
+
+app.listen(port, () => console.log(`listening on port ${port}`));
+
+
+
+
+
+
+//base64 using Buffer for reference
+// var a = Buffer.from("HelloWOrld", "ascii");
+// console.log(a);
+// console.log(1111, a.toString('base64'))
+
+// Moment.js Add time for Refresh Keys with UTC time;
+// var a = moment().utc().add(28800,'seconds');
+// console.log(3, a);
+
+// OR Date.now()+28800
+
   // if (req.query.verify === '079f1f24159ab3c078e28243a940268387a6a302a3e7de8e9291b748430dfae0') {
   //   res.status(204);
   //   console.log('success', req.body);
@@ -142,22 +176,3 @@ app.post('/api/fitbit-notifications', (req, res) => {
 // db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2", [date,id], function(err, res) {
 // console.log(4, err, 5,res);
 // })
-function updateTokens () {
-  console.log("UPDATING Access Tokens")
-  db.run("select * from profile", (dbErr, profilesArr)=> {
-    fitbitCtrl.updateAccessTokens(profilesArr).then((response) =>
-      console.log('FINISHED UPDATING TOKENS', response)
-    )
-  })
-}
-setInterval(updateTokens, 2700000) //2700000 ms = 45min 60000 = 1min
-
-//********* Stripe Endpoints **********//
-const stripeController = require('./api/controllers/stripeController');
-app.post('/api/stripeToken', stripeController.createCustomer)
-
-// stripeController.chargeCustomer("3QWD5T", 1000, "This is a test")
-
-
-
-app.listen(port, () => console.log(`listening on port ${port}`));

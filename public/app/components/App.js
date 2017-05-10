@@ -3,6 +3,12 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Nav from './Nav'
 import Home from './Home'
 import Profile from './Profile'
+import styled from 'styled-components'
+
+const MainWrap = styled.section`
+  width: 100%;
+  height: 100%;
+`
 
 class App extends Component {
   render() {
