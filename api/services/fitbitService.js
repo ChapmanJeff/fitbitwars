@@ -6,7 +6,7 @@ const sqlService = require('./sqlService')
 
 module.exports = {
 
-  getDailyActivity: (user_id, accesstoken, date) => {
+  getDailyActivity (user_id, accesstoken, date) {
     var formatDate = moment(date).format('YYYY-MM-DD');
     console.log(112233, user_id, accesstoken, formatDate);
     var dfd = q.defer();
@@ -30,7 +30,7 @@ module.exports = {
 
   },
 
-  updateDailyActivity: (date, ownerId, accesstoken, collectionType) => {
+  updateDailyActivity (date, ownerId, accesstoken, collectionType) {
     var dfd = q.defer();
     request({
            method: 'GET',
@@ -54,7 +54,7 @@ module.exports = {
   // var a = Buffer.from("HelloWOrld", "ascii");
   // console.log(a);
   // console.log(1111, a.toString('base64'))
-  updateAccessCodes : (profile) => {
+  updateAccessCodes (profile) {
     var dfd = q.defer();
     var clientID = process.env.clientID || config.fitbit.clientID;
     var clientSecret = process.env.clientSecret || config.fitbit.clientSecret;

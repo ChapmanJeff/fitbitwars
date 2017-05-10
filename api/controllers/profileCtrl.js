@@ -1,6 +1,6 @@
 module.exports = {
 
-  removeTokens: (req, res) => {
+  removeTokens (req, res) {
     var profile = {
     firstname: req.user.firstname,
     fullname: req.user.fullname,

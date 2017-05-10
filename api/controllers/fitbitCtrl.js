@@ -8,7 +8,7 @@ const moment = require('moment')
 module.exports = {
 
 // FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY
-  getDailyActivity: (req, res) => {
+  getDailyActivity (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken, '2017-05-01')
       .then((response) => {
         // sqlService.saveActivitySummary().then
@@ -47,7 +47,7 @@ module.exports = {
 
   },
 
-  updateDailyActivity: (notifArr) => {
+  updateDailyActivity (notifArr) {
     var allUpdates = notifArr.map((notif) => {
       // for (var i = 0; i < notifArr.length; i++) {
       var date = notif.date;
@@ -82,7 +82,7 @@ module.exports = {
     return q.all(allUpdates);
   }, //End of Function
 
-  updateAccessTokens: (profilesArr) => {
+  updateAccessTokens (profilesArr) {
     var dfd = q.defer();
       var updatedAccessTokens = () => {
         profilesArr.map((profile) => {

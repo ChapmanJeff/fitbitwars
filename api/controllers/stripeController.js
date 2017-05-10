@@ -7,7 +7,8 @@ const sqlService = require('../services/sqlService')
 
 
 module.exports = {
-  createCustomer: (req, res)=>{
+
+  createCustomer (req, res) {
     let token = req.body.token;
 
     stripe.customers.create({
@@ -20,7 +21,7 @@ module.exports = {
     })
   },
 
-  chargeCustomer: (user_id, amount, description) => {
+  chargeCustomer (user_id, amount, description) {
     console.log(user_id, amount)
     //get customerId from DB and save to variable
     //req.body needs amount $5 = 500
