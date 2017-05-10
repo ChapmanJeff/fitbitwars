@@ -139,7 +139,15 @@ module.exports = {
   saveStripeCustomer (customer, user_id) {
     var dfd = q.defer();
     console.log("IN SQL SERVICE",customer.id, customer.email, user_id)
-
+    db.profile.save({
+      user_id: user_id,
+      email: customer.email
+    }, (dbErr, dbRes)=>{
+      if (dbErr) {
+        console.log("Err Saving email from customer Object", dbErr)
+      }
+      console.log("Saved customer Email to Profile")
+    })
     db.stripe_customer.insert({
       user_id: user_id,
       customer_id: customer.id,

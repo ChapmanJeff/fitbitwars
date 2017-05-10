@@ -13,7 +13,8 @@ module.exports = {
     distanceunit: req.user.distanceunit,
     gender: req.user.gender,
     timezone: req.user.timezone,
-    offsetfromutcmillis:req.user.offsetfromutcmillis
+    offsetfromutcmillis:req.user.offsetfromutcmillis,
+    email: req.user.email
   }
     res.send(profile);
   }
