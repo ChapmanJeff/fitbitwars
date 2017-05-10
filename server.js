@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session');
 const passport = require('passport');
 const massive = require('massive');
+// const cors = require('cors')
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
@@ -13,6 +14,12 @@ const app = express();
 app.use(express.static('public'));
 
 app.use(bodyParser.json());
+
+// var corsOptions = {
+//   origin: 'http://localhost:8080',
+//   optionsSuccessStatus: 200
+// }
+// app.use(cors(corsOptions));
 
 app.use(session({
   secret: process.env.sessionSecret || config.session.secret,
@@ -29,6 +36,9 @@ const db = app.get('db');
 
 module.exports = app;
 const userCtrl = require('./api/controllers/userCtrl');
+
+// const stripe = require('./api/services/stripeService')
+// stripe.test()
 
 
 passport.use(new FitbitStrategy({
@@ -81,19 +91,19 @@ app.get('/auth/fitbit',
 ));
 
 app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
-        successRedirect: '/profile',
+        successRedirect: 'http://localhost:8080/profile',
         failureRedirect: '/auth/fitbit/failure'
 }));
 
 const profileCtrl = require('./api/controllers/profileCtrl');
-app.get('/profile', profileCtrl.removeTokens);
+app.get('/api/profile', profileCtrl.removeTokens);
 
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
 app.get('/auth/logout', (req, res) => {
   req.logout();
-  res.redirect('/logout');
+  res.redirect('http://localhost:8080');
 })
 
 
@@ -141,5 +151,13 @@ function updateTokens () {
   })
 }
 setInterval(updateTokens, 2700000) //2700000 ms = 45min 60000 = 1min
+
+//********* Stripe Endpoints **********//
+const stripeController = require('./api/controllers/stripeController');
+app.post('/api/stripeToken', stripeController.createCustomer)
+
+// stripeController.chargeCustomer("3QWD5T", 1000, "This is a test")
+
+
 
 app.listen(port, () => console.log(`listening on port ${port}`));

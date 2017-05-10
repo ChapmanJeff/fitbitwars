@@ -6,7 +6,7 @@ const moment = require('moment');
 
 module.exports = {
 
-  getAccessToken: (user_id) => {
+  getAccessToken (user_id) {
     var dfd = q.defer();
     db.run("select accesstoken from profile where user_id = $1",[user_id],
       (err, res) => {
@@ -21,7 +21,7 @@ module.exports = {
     return dfd.promise;
   },
 
-  checkExistingDay: (date, user_id) => {
+  checkExistingDay (date, user_id) {
     var dfd = q.defer();
     db.run("select p.user_id, a.id, a.date, p.accesstoken from profile p, activity_summary a where p.user_id = a.user_id AND date = $1 AND p.user_id= $2",
       [date,user_id],
@@ -37,7 +37,7 @@ module.exports = {
     return dfd.promise;
   },
 
-  updateActivitySummary: (fitResponse, id, date) => {
+  updateActivitySummary (fitResponse, id, date) {
     var dfd = q.defer();
       var distanceArr = fitResponse.summary.distances;
       var totalDistanceCalc = (distanceArr) => {
@@ -76,7 +76,7 @@ module.exports = {
     return dfd.promise;
   },
 
-  insertDailySummary: (fitResponse, user_id, date) => {
+  insertDailySummary (fitResponse, user_id, date) {
     var dfd = q.defer();
       var distanceArr = fitResponse.summary.distances;
       var totalDistanceCalc = (distanceArr) => {
@@ -115,7 +115,7 @@ module.exports = {
     return dfd.promise;
   },
 
-  updateTokens: (newData) => {
+  updateTokens (newData) {
     var dfd = q.defer();
 
     db.profile.save({
@@ -129,6 +129,66 @@ module.exports = {
         dfd.reject(new Error(dbErr))
       } else {
         console.log('dbRes UPDATED TOKEN',dbRes)
+        dfd.resolve(dbRes);
+      }
+    })
+
+    return dfd.promise;
+  },
+
+  saveStripeCustomer (customer, user_id) {
+    var dfd = q.defer();
+    console.log("IN SQL SERVICE",customer.id, customer.email, user_id)
+
+    db.stripe_customer.insert({
+      user_id: user_id,
+      customer_id: customer.id,
+      email: customer.email,
+      created: customer.created,
+      default_source: customer.default_source
+    }, (dbErr, dbRes) => {
+      if (dbErr) {
+        console.log('dbErr saveStripeCustomer',dbErr)
+        dfd.reject(new Error(dbErr))
+      } else {
+        console.log('dbRes saveStripeCustomer',dbRes)
+        dfd.resolve(dbRes);
+      }
+    })
+
+    return dfd.promise;
+  },
+
+  findStripeCustomer (user_id) {
+    var dfd = q.defer();
+    console.log(user_id)
+    db.stripe_customer.findOne({user_id: user_id}, (dbErr, user) => {
+      if (dbErr) {
+        dfd.reject(new Error(dbErr))
+      }
+      console.log(user)
+      dfd.resolve( user.customer_id )
+    })
+    return dfd.promise;
+  },
+
+  saveChargeInfo (charge, user_id) {
+    var dfd = q.defer();
+
+    db.stripe_charges.insert({
+      charge_id: charge.id,
+      user_id: user_id,
+      description: charge.description,
+      amount: charge.amount,
+      created: charge.created,
+      paid: charge.paid,
+      status: charge.status
+    },(dbErr, dbRes)=> {
+      if (dbErr) {
+        console.log('dbErr saveChargeErr', dbErr)
+        dfd.reject(new Error(dbErr))
+      } else {
+        console.log('dbRes savedCharge', dbRes)
         dfd.resolve(dbRes);
       }
     })
