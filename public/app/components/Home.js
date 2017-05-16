@@ -136,9 +136,9 @@ class Home extends Component {
           <ContrastChild><h2>Add A Payment Method</h2><p>Using Stripe, securely add a way to pay</p></ContrastChild>
           <ContrastChild><h2>Challenge Friends</h2><p>Create a competition. Stay motivated. Make money</p></ContrastChild>
         </ContrastDiv>
-        <Tile leftImg='./app/images/clipboard-list-outline-filled/256x256.png' rightText='Set up a competition with daily goal requirements, a consequnece amount and a competion duration' />
-      <Tile rightImg='./app/images/money-outline-filled/256x256.png' leftText='If you fail to reach the goals for a day you will have to pay a predetermined amount into the community pot' />
-    <Tile leftImg='./app/images/badge-outline-filled/256x256.png' rightText='If you perform better than those in your competition pool you will walk away a winner and will collect the money in the pot' />
+        <Tile leftImg='./app/images/clipboard256x256.png' rightText='Set up a competition with daily goal requirements, a consequnece amount and a competion duration' />
+      <Tile rightImg='./app/images/money256x256.png' leftText='If you fail to reach the goals for a day you will have to pay a predetermined amount into the community pot' />
+    <Tile leftImg='./app/images/badge256x256.png' rightText='If you perform better than those in your competition pool you will walk away a winner and will collect the money in the pot' />
         <div>
           <div></div>
           <div></div>
