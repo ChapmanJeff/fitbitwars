@@ -82,6 +82,16 @@ app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
 
 
 //***** APP ENDPOINTS *****//
+
+function isAuthed (req, res, next) {
+    if (req.user) {
+      next();
+    } else {
+      console.log('Please Log In')
+      res.redirect('http://localhost:8080');
+    }
+}
+
 app.get('/api/isLoggedIn', (req,res)=>
   {if (req.user) {
     res.send({loggedIn:true})
@@ -94,12 +104,12 @@ app.get('/auth/logout', (req, res) => {
 })
 
 const profileCtrl = require('./api/controllers/profileCtrl');
-app.get('/api/profile', profileCtrl.removeTokens);
+app.get('/api/profile', isAuthed, profileCtrl.removeTokens);
 
 
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
-app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
+app.get('/api/dailyActivity', isAuthed, fitbitCtrl.getDailyActivity);
 
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', (req, res) => {

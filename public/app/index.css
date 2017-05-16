@@ -1,8 +1,22 @@
-body {
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body{
   font-family: -apple-system
   ,BlinkMacSystemFont,Segoe
   UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica
   Neue, sans-serif;
+  width: 100%;
+  height: 100%;
+  background-color: #F1F0F2;
+}
+
+#app, .container {
+  width: 100%;
+  height: 100%;
 }
 
 ul {

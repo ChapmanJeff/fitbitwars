@@ -23,8 +23,10 @@ class Profile extends Component {
   }
 
   render() {
+    console.log(999, this.props)
     return(
       <div>
+
         <TakeMoney />
         {this.state.profile}
       </div>

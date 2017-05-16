@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { NavLink, Link} from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 const Ul = styled.ul`
   display: flex;
@@ -9,21 +10,19 @@ const Ul = styled.ul`
 `
 
 const Li = styled.li`
-  font-size: 20px;
+  font-size: 25px;
   margin: 4px;
   padding: 1px;
+  margin-right: 15px;
 `
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
-  color: grey;
-
-  &:hover {
-    font-weight: bold;
-  }
+  color: #4A5153;
+  font-weight: 100;
 
   &.active {
-    font-weight: bold;
-    color: red;
+    font-weight: 400;
+    color: #38618C;
   }
 `
 const StyledLink = styled.a`
@@ -32,10 +31,11 @@ const StyledLink = styled.a`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px;
+  font-size: 25px;
   margin: 4px;
-  font-weight: 500;
+  font-weight: 100;
   color: #4A5153;
+  font
 `
 const Navbar = styled.nav`
   height: 50px;
@@ -43,9 +43,47 @@ const Navbar = styled.nav`
   border-bottom: 1px solid #CBC9CF;
   display: flex;
   justify-content: space-between;
-  padding: 5px;
+  padding: 5px 25px;
   align-items: center;
+  background: white;
 `
+
+const MainLinks = ({pageLinks}) => {
+  console.log(1122223333444,pageLinks)
+  return (
+    <Ul>
+      <Li style={{fontFamily:'Oswald', letterSpacing: 1.5}}>FITBIT WARS</Li>
+      {Object.keys(pageLinks).map((key)=>{
+        if (key === 'Home') {
+          return <Li key={key}>
+            <StyledNavLink exact to={pageLinks[key]}>
+              {key}
+            </StyledNavLink>
+          </Li>
+        }
+        return <Li key={key}>
+          <StyledNavLink to={pageLinks[key]}>
+            {key}
+          </StyledNavLink>
+        </Li>
+      })}
+      {/* <Li>
+        <StyledNavLink exact to='/'>
+        Home
+        </StyledNavLink>
+      </Li>
+      <Li>
+        <StyledNavLink to='/profile'>
+          Profile
+        </StyledNavLink>
+      </Li> */}
+    </Ul>
+  )
+}
+
+MainLinks.propTypes = {
+  pageLinks: PropTypes.object.isRequired,
+}
 
 const LoginOrOut = ({loggedIn}) => {
   return (
@@ -79,20 +117,10 @@ class Nav extends Component{
 
 
   render (){
+    console.log('TESTTTONG',this.props.links)
     return (
       <Navbar>
-        <Ul>
-          <Li>
-            <StyledNavLink exact to='/'>
-            Home
-          </StyledNavLink>
-          </Li>
-          <Li>
-            <StyledNavLink to='/profile'>
-              Profile
-            </StyledNavLink>
-          </Li>
-        </Ul>
+        <MainLinks pageLinks={this.props.links}/>
         <LoginOrOut loggedIn={this.state.loggedIn}/>
       </Navbar>
     )
@@ -100,3 +128,7 @@ class Nav extends Component{
 }
 
 export default Nav;
+
+Nav.propTypes = {
+  links: PropTypes.object.isRequired,
+}
