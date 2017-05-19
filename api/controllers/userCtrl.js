@@ -24,7 +24,8 @@ module.exports = {
     	gender: profile._json.user.gender,
     	timezone: profile._json.user.timezone,
     	offsetfromutcmillis:	profile._json.user.offsetFromUTCMillis,
-    	locale: profile._json.user.locale
+    	locale: profile._json.user.locale,
+      stripe_connected: false
     }, (err, user) => {
       console.log(222, 'createUser ', user, err);
       return done(err, user)

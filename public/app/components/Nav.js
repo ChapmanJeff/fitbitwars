@@ -47,9 +47,14 @@ const Navbar = styled.nav`
   align-items: center;
   background: white;
 `
+const NavImg = styled.img`
+  height:40px;
+  width:40px;
+  border-radius:50px;
+  border: 1px solid #38618C;
+`
 
 const MainLinks = ({pageLinks}) => {
-  console.log(1122223333444,pageLinks)
   return (
     <Ul>
       <Li style={{fontFamily:'Oswald', letterSpacing: 1.5}}>FITBIT WARS</Li>
@@ -85,10 +90,15 @@ MainLinks.propTypes = {
   pageLinks: PropTypes.object.isRequired,
 }
 
-const LoginOrOut = ({loggedIn}) => {
+const LoginOrOut = ({profile}) => {
   return (
     <div>
-      {loggedIn ? <StyledLink href='/auth/logout'>Logout</StyledLink> : <StyledLink href='/auth/fitbit'>Login</StyledLink>}
+      {profile ?
+        <div style={{display:'flex'}}>
+          <Li><NavImg src={profile.avatar} /></Li>
+          <StyledLink href='/auth/logout'>Logout</StyledLink>
+        </div>
+        : <StyledLink href='/auth/fitbit'>Login</StyledLink>}
     </div>
   )
 }
@@ -99,29 +109,20 @@ class Nav extends Component{
     super(props);
 
     this.state= {
-      loggedIn: true,
+
     }
   }
 
   componentDidMount() {
-    axios.get('/api/isLoggedIn')
-      .then((result)=>{
-        console.log(result)
-        this.setState(()=>{
-          return {
-            loggedIn: result.data.loggedIn
-          }
-        })
-      })
+
   }
 
 
   render (){
-    console.log('TESTTTONG',this.props.links)
     return (
       <Navbar>
         <MainLinks pageLinks={this.props.links}/>
-        <LoginOrOut loggedIn={this.state.loggedIn}/>
+        <LoginOrOut profile={this.props.profile}/>
       </Navbar>
     )
   }

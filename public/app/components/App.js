@@ -11,10 +11,12 @@ class App extends Component {
     super(props);
 
     this.state= {
-      navLinks: {Home: '/', Profile:'/profile'},
+      navLinks: {Home: '/'},
+      profileInfo: null,
     }
 
     this.changeNavLinks = this.changeNavLinks.bind(this);
+    this.changeProfileInfo = this.changeProfileInfo.bind(this);
   }
 
   changeNavLinks (object) {
@@ -25,16 +27,25 @@ class App extends Component {
     })
   }
 
+  changeProfileInfo (object) {
+    this.setState(()=> {
+      return {
+        profileInfo: object
+      }
+    })
+  }
 
 
   render() {
     return (
       <Router>
         <div className='container'>
-          <Nav links={this.state.navLinks}/>
+          <Nav links={this.state.navLinks} profile={this.state.profileInfo}/>
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route path='/profile' component={Profile} />
+            <Route path='/profile' render={()=> <Profile
+                  updateNav={this.changeNavLinks}
+                  updateProfile={this.changeProfileInfo}/>} />
             <Route render={()=>(<p>Not Found</p>)} />
           </Switch>
         </div>

@@ -24,6 +24,10 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use((err,req,res,next)=>{
+  console.error(err.stack)
+  res.status(500).send('Broken')
+})
 
 
 //********* CONNECT DB **********//
@@ -51,7 +55,9 @@ passport.use(new FitbitStrategy({
           user_id: profile.id,
           accesstoken: accessToken,
           refreshtoken:refreshToken,
-          accesstokentimestamp: moment.utc().format()
+          accesstokentimestamp: moment.utc().format(),
+          avatar: profile._json.user.avatar,
+          avatar150: profile._json.user.avatar150
         },
         (err, res)=> done(err, res))
       }
@@ -92,24 +98,18 @@ function isAuthed (req, res, next) {
     }
 }
 
-app.get('/api/isLoggedIn', (req,res)=>
-  {if (req.user) {
-    res.send({loggedIn:true})
-  } res.send({loggedIn:false})
-})
-
 app.get('/auth/logout', (req, res) => {
   req.logout();
   res.redirect('http://localhost:8080');
 })
 
 const profileCtrl = require('./api/controllers/profileCtrl');
-app.get('/api/profile', isAuthed, profileCtrl.removeTokens);
+app.get('/api/profile', profileCtrl.removeTokens);
 
 
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
-app.get('/api/dailyActivity', isAuthed, fitbitCtrl.getDailyActivity);
+app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
 
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', (req, res) => {

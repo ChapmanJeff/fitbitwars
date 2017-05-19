@@ -141,7 +141,8 @@ module.exports = {
     console.log("IN SQL SERVICE",customer.id, customer.email, user_id)
     db.profile.save({
       user_id: user_id,
-      email: customer.email
+      email: customer.email,
+      stripe_connected: true
     }, (dbErr, dbRes)=>{
       if (dbErr) {
         console.log("Err Saving email from customer Object", dbErr)

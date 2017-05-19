@@ -14,8 +14,12 @@ module.exports = {
     gender: req.user.gender,
     timezone: req.user.timezone,
     offsetfromutcmillis:req.user.offsetfromutcmillis,
-    email: req.user.email
+    email: req.user.email,
+    stripe_connected: req.user.stripe_connected
   }
+    if (!req.user) {
+      res.status(505).send('')
+    }
     res.send(profile);
   }
 
