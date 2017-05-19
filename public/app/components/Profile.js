@@ -41,7 +41,7 @@ const ProfileHeader = ({profile}) => {
           </section>
           <div className='lower-right'style={{height:'85%', display:'flex'}}>
             <div className='lower-right-left' style={{height:'100%', width:'70%', borderRight:'1px solid #f6f6f6'}}>
-              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6'}}>
+              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6', padding:'20px'}}>
                 <h1 style={{fontFamily:'Oswald', fontSize:'25px', fontWeight:'100', letterSpacing:'2px'}}>Last Sync</h1>
                 <div className='sync-data' style={{width:'85%', borderRadius:'6px', marginLeft:'50px', marginTop:'20px', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
                   <Banner style={{height:'30px', borderRadius:'2px', border:'none'}}></Banner>
@@ -76,7 +76,7 @@ const ProfileHeader = ({profile}) => {
                 </div>
               </div>
 
-              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6'}}>
+              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6', padding:'20px'}}>
                 <h1 style={{fontFamily:'Oswald', fontSize:'25px', fontWeight:'100', letterSpacing:'2px'}}>Last Sync</h1>
                 <div className='sync-data' style={{width:'85%', borderRadius:'6px', marginLeft:'50px', marginTop:'20px', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
                   <Banner style={{height:'30px', borderRadius:'2px', border:'none'}}></Banner>
@@ -112,7 +112,7 @@ const ProfileHeader = ({profile}) => {
               </div>
 
               {/* ***************DELETE THIS************* */}
-              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6'}}>
+              <div className='latest-sync' style={{marginBottom:'30px',paddingBottom:'30px', borderBottom:'1px solid #f6f6f6', padding:'20px'}}>
                 <h1 style={{fontFamily:'Oswald', fontSize:'25px', fontWeight:'100', letterSpacing:'2px'}}>Last Sync</h1>
                 <div className='sync-data' style={{width:'85%', borderRadius:'6px', marginLeft:'50px', marginTop:'20px', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
                   <Banner style={{height:'30px', borderRadius:'2px', border:'none'}}></Banner>
@@ -147,7 +147,7 @@ const ProfileHeader = ({profile}) => {
                 </div>
               </div>
               {/* *************DELETE ABOVE****************** */}
-              
+
             </div>
             <div className='lower-right-right' style={{height:'100%', width:'30%', backgroundColor:'#FAFAFA'}}>
               <div className='box' style={{padding:'20px', display:'flex', flexDirection:'column', alignItems:'center'}}>
