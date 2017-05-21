@@ -21,6 +21,8 @@ module.exports = {
       res.status(505).send('')
     }
     res.send(profile);
-  }
+  },
+
+  
 
 }

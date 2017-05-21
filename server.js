@@ -110,6 +110,7 @@ app.get('/api/profile', profileCtrl.removeTokens);
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
+app.get('/api/lastSync', fitbitCtrl.getLastSync)
 
 // Fitbit API subscriber notifications
 app.get('/api/fitbit-notifications', (req, res) => {

@@ -7,6 +7,14 @@ const moment = require('moment')
 
 module.exports = {
 
+  //From server.js app.get('api/lastSync') => Ask sqlService.js for last sync info for use in Profile Component
+  getLastSync (req, res) {
+    sqlService.getLastSync(req.user.user_id)
+      .then((result)=>{
+        res.status(200).send(result)
+      })
+  },
+
 // FOR TEST ONLY ---- NO LONGER USING THIS FIRST FUNCTION. NOW USING UPDATING DAILY ACTIVITY VIA SUBSCRIPTIONS
   getDailyActivity (req, res) {
     fitbitService.getDailyActivity(req.user.user_id, req.user.accesstoken, '2017-05-01')

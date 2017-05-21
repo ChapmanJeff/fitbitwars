@@ -60,7 +60,7 @@ class TakeMoney extends Component {
        zipCode={true}
        locale="auto"
        billingAddress={true}
-       label="Set Up Stripe Payments"
+       label="Set Up Payments"
      />
     )
   }

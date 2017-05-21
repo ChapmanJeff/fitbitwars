@@ -7,6 +7,10 @@ module.exports = {
       .then((result)=>result.data)
   },
 
+  getLastSync () {
+    return axios.get('/api/lastSync')
+      .then((result)=>result.data)
+  },
 
 
 }

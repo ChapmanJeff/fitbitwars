@@ -40,6 +40,7 @@ module.exports = {
   updateActivitySummary (fitResponse, id, date) {
     var dfd = q.defer();
       var distanceArr = fitResponse.summary.distances;
+      //Find and convert distance from KM to Miles
       var totalDistanceCalc = (distanceArr) => {
         for (var i = 0; i < distanceArr.length; i++) {
           if (distanceArr[i].activity === "total") {
@@ -74,6 +75,21 @@ module.exports = {
         }
       })
     return dfd.promise;
+  },
+
+  //From FitbitCtrl => Grab last sync info for user and return for use in profile component
+  getLastSync (user_id) {
+    var dfd = q.defer();
+    db.run("select * from activity_summary where user_id = $1 order by date desc limit 1",[user_id],
+    (dbErr, dbRes) => {
+      if (dbErr) {
+        console.log(dbErr)
+      }
+      delete dbRes[0].user_id;
+      dfd.resolve(dbRes[0])
+    })
+    return dfd.promise;
+
   },
 
   insertDailySummary (fitResponse, user_id, date) {
