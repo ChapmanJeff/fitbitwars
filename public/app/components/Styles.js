@@ -15,6 +15,7 @@ export const Button = styled.button`
   cursor: pointer;
 `
 
+// *** Next 3:Switch, Slider and InputSwitch are used together and cannot be used independently. They create the slider checkbox input used in modals ***//
 export const Switch = styled.label`
   position: relative;
   display: inline-block;
@@ -51,6 +52,7 @@ export const Slider = styled.div`
 `
 
 export const InputSwitch = styled.input`
+  margin:0;
     &:checked + div {
       background-color: #35a7ff;
     }
@@ -62,4 +64,15 @@ export const InputSwitch = styled.input`
       -ms-transform: translateX(26px);
       transform: translateX(26px);
     }
+`
+//******** Above 3 must be used together and not independently ***** //
+
+export const Icon  = styled.img`
+  height: 50px;
+  width: 50px;
+`
+
+export const AmountInput = styled.input`
+  height: 25px;
+  width: 100%;
 `

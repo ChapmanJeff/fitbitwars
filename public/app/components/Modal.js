@@ -10,7 +10,8 @@ const Modal = ({isOpen, onClose, children, containerClassName, className, noBack
   return (
     <div className={containerClassName}>
       <div className={className} style={{position: 'absolute',
-          top: '50%',left: '50%',transform: 'translate(-50%, -50%)',zIndex: '9999',background: '#fff', borderRadius:'4px', margin:'20px', border:'2px solid #35a7ff', height:'70%', width:'60%'}}>
+          top: '50%',left: '50%',transform: 'translate(-50%, -50%)',zIndex: '9999',background: '#fff',
+          borderRadius:'4px', margin:'20px', border:'2px solid #35a7ff', width:'60%', display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
         {children}
       </div>
       {!noBackdrop &&

@@ -5,6 +5,7 @@ import ChallengeSignUp from './ChallengeSignUp'
 import TakeMoney from './StripeCheckout'
 import moment from 'moment'
 import styled from 'styled-components'
+import {Icon} from './Styles'
 
 const Banner = styled.section`
   background-size: cover;
@@ -74,27 +75,27 @@ const ProfileHeader = ({profile, lastSync, openModal}) => {
                   <Banner style={{height:'30px', borderRadius:'2px', border:'none'}}></Banner>
                   <div className='data' style={{display:'flex',justifyContent:'space-around', alignItems:'center', marginTop:'-20px', fontFamily:'Raleway', textAlign:'center', paddingBottom:'10px'}}>
                     <div className='steps'>
-                      <img src='./app/images/icon steps.png' style={{heigh:'50px', width:'50px'}}/>
+                      <Icon src='./app/images/icon steps.png'/>
                       <h2 style={{color:'#ff951c'}}>{lastSync.summary_steps}</h2>
                       <h2>Steps</h2>
                     </div>
                     <div>
-                      <img src='./app/images/icon stairs.png' style={{heigh:'50px', width:'50px'}}/>
+                      <Icon src='./app/images/icon stairs.png'/>
                       <h2 style={{color:'#ff951c'}}>{lastSync.summary_floors}</h2>
                       <h2>Floors</h2>
                     </div>
                     <div>
-                      <img src='./app/images/icon distance.png' style={{heigh:'50px', width:'50px'}}/>
+                      <Icon src='./app/images/icon distance.png'/>
                       <h2 style={{color:'#ff951c'}}>{Math.round(lastSync.summary_totalDistance * 100)/100}</h2>
                       <h2>Miles</h2>
                     </div>
                     <div>
-                      <img src='./app/images/icon fire.png' style={{heigh:'50px', width:'50px'}}/>
+                      <Icon src='./app/images/icon fire.png'/>
                       <h2 style={{color:'#ff951c'}}>{lastSync.summary_caloriesOut}</h2>
                       <h2>Calories</h2>
                     </div>
                     <div>
-                      <img src='./app/images/icon active.png' style={{heigh:'50px', width:'50px'}}/>
+                      <Icon src='./app/images/icon active.png'/>
                       <h2 style={{color:'#ff951c'}}>{lastSync.summary_activeMinutes}</h2>
                       <h2>Minutes</h2>
                     </div>
