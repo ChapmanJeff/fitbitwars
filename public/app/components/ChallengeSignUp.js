@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {Switch, Slider, InputSwitch, Icon, AmountInput, Button} from './Styles'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import moment from 'moment'
 
 const SwitchInput = ({infoTog, id}) => {
   return (
@@ -46,29 +49,35 @@ class ChallengeSignUp extends Component {
     super(props)
     this.state = {
       stepsOn: false,
-      stepsNum: '',
+      stepsVal: '',
       floorsOn: false,
-      floorsNum: '',
+      floorsVal: '',
       distanceOn: false,
-      distanceNum: '',
+      distanceVal: '',
       caloriesOn: false,
-      caloriesNum: '',
+      caloriesVal: '',
       minutesOn: false,
-      minutesNum: '',
+      minutesVal: '',
       privateOn:false,
-      privateNum:''
+      privateVal:'',
+      challengeVal: '',
+      betVal: '',
+      startDateVal: '',
+      endDateVal: ''
     }
 
     this.infoTog = this.infoTog.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleStartDateChange = this.handleStartDateChange.bind(this);
+    this.handleEndDateChange = this.handleEndDateChange.bind(this);
   }
 
   infoTog (label) {
     this.setState(()=>{
-      if (this.state[`${label}Num`]) {
+      if (this.state[`${label}Val`]) {
         var newState = {};
         newState[`${label}On`] = !this.state[`${label}On`];
-        newState[`${label}Num`] = '';
+        newState[`${label}Val`] = '';
         return newState;
       } else {
         var newState = {};
@@ -83,48 +92,87 @@ class ChallengeSignUp extends Component {
 
     this.setState(()=> {
       var newState = {};
-      newState[`${action}Num`] = value;
+      newState[`${action}Val`] = value;
       return newState;
     })
   }
 
+  handleStartDateChange(date) {
+    this.setState({
+      startDateVal: date
+    });
+  }
+
+  handleEndDateChange(date) {
+    this.setState({
+      endDateVal: date
+    });
+  }
+
+submitChallenge () {
+  event.preventDefault();
+  let challenge = {
+    stepsOn: this.state.stepsOn,
+    stepsVal: this.state.stepsVal,
+    floorsOn: this.state.floorsOn,
+    floorsVal: this.state.floorsVal,
+    distanceOn: this.state.distanceOn,
+    distanceVal: this.state.distanceVal,
+    caloriesOn: this.state.caloriesOn,
+    caloriesVal: this.state.caloriesVal,
+    minutesOn: this.state.minutesOn,
+    minutesVal: this.state.minutesVal,
+    privateOn:this.state.privateOn,
+    privateVal:this.state.privateVal,
+    challengeVal: this.state.challengeVal,
+    betVal: this.state.challengeVal,
+    startDateVal: this.state.startDateVal,
+    endDateVal: this.state.endDateVal
+  };
+  console.log(challenge)
+  this.props.closeModal();
+
+}
 
 
   render() {
     var activityInputs = [
-      {img: './app/images/icon steps.png',label: 'Steps',id: 'steps',infoTog: this.infoTog,onOff: this.state.stepsOn,inputVal: this.state.stepsNum,handleInputChange: this.handleInputChange,placeholder: 'How Many Steps Per Day? Ex: 10000'},
-      {img: './app/images/icon stairs.png',label: 'Floors',id: 'floors',infoTog: this.infoTog,onOff: this.state.floorsOn,inputVal: this.state.floorsNum,handleInputChange: this.handleInputChange,placeholder: 'How Many Floors Per Day? Ex: 10'},
-      {img: './app/images/icon distance.png',label: 'Distance',id: 'distance',infoTog: this.infoTog,onOff: this.state.distanceOn,inputVal: this.state.distanceNum,handleInputChange: this.handleInputChange,placeholder: 'How Many Miles Per Day? Ex: 3'},
-      {img: './app/images/icon fire.png',label: 'Calories',id: 'calories',infoTog: this.infoTog,onOff: this.state.caloriesOn,inputVal: this.state.caloriesNum,handleInputChange: this.handleInputChange,placeholder: 'How Many Calories Per Day? Ex: 2000'},
-      {img: './app/images/icon active.png',label: 'Minutes',id: 'minutes',infoTog: this.infoTog,onOff: this.state.minutesOn,inputVal: this.state.minutesNum,handleInputChange: this.handleInputChange,placeholder: 'How Many Active Minutes Per Day? Ex: 30'}
+      {img: './app/images/icon steps.png',label: 'Steps',id: 'steps',infoTog: this.infoTog,onOff: this.state.stepsOn,inputVal: this.state.stepsVal,handleInputChange: this.handleInputChange,placeholder: 'How Many Steps Per Day? Ex: 10000'},
+      {img: './app/images/icon stairs.png',label: 'Floors',id: 'floors',infoTog: this.infoTog,onOff: this.state.floorsOn,inputVal: this.state.floorsVal,handleInputChange: this.handleInputChange,placeholder: 'How Many Floors Per Day? Ex: 10'},
+      {img: './app/images/icon distance.png',label: 'Distance',id: 'distance',infoTog: this.infoTog,onOff: this.state.distanceOn,inputVal: this.state.distanceVal,handleInputChange: this.handleInputChange,placeholder: 'How Many Miles Per Day? Ex: 3'},
+      {img: './app/images/icon fire.png',label: 'Calories',id: 'calories',infoTog: this.infoTog,onOff: this.state.caloriesOn,inputVal: this.state.caloriesVal,handleInputChange: this.handleInputChange,placeholder: 'How Many Calories Per Day? Ex: 2000'},
+      {img: './app/images/icon active.png',label: 'Minutes',id: 'minutes',infoTog: this.infoTog,onOff: this.state.minutesOn,inputVal: this.state.minutesVal,handleInputChange: this.handleInputChange,placeholder: 'How Many Active Minutes Per Day? Ex: 30'}
     ]
     return (
       <div style={{width:'100%', height:'100%', display:'flex', flexDirection:'column'}}>
         <section style={{height:'5%', background:'linear-gradient(to right,#202229, #38618C 130%)'}}/>
-        <form style={{display:'flex', flexDirection:'column', padding:'10px', height:'100%'}}>
+        <section style={{display:'flex', flexDirection:'column', padding:'10px', height:'100%'}}>
           <h1 style={{textAlign:'center', marginBottom:'20px'}}>CREATE A NEW CHALLENGE</h1>
           <div>
             <h2>Name of Challenge</h2>
-            <AmountInput style={{marginBottom:'10px'}} placeholder='Choose a name'/>
+            <AmountInput style={{marginBottom:'10px'}} value={this.state.challengeVal} onChange={(e) => this.handleInputChange(e, 'challenge')} placeholder='Choose a name'/>
             <h2>Daily Bet Amount</h2>
-            <AmountInput style={{marginBottom:'10px'}} placeholder='$20'/>
+            <AmountInput style={{marginBottom:'10px'}} value={this.state.betVal} onChange={(e) => this.handleInputChange(e, 'bet')} placeholder='Ex: $20'/>
+
             <h2>Start Date</h2>
-            <AmountInput style={{marginBottom:'10px'}} placeholder='Use this format: MM/DD/YYYY - Tomorrow or Later'/>
+            <DatePicker selected={this.state.startDateVal} placeholder='Choose Date' onChange={this.handleStartDateChange} />
+
             <h2>End Date</h2>
-            <AmountInput style={{marginBottom:'10px'}} placeholder='Use this format: MM/DD/YYYY'/>
+            <DatePicker selected={this.state.endDateVal} placeholder='Choose Date' onChange={this.handleEndDateChange} />
+
             <h2 style={{textAlign:'center'}}>Set Your Goals</h2>
           </div>
           {activityInputs.map((obj)=>{
-            return <IconInput img={obj.img} label={obj.label} id={obj.id} infoTog={obj.infoTog}
+            return <IconInput key={obj.id} img={obj.img} label={obj.label} id={obj.id} infoTog={obj.infoTog}
               onOff={obj.onOff} inputVal={obj.inputVal} handleInputChange={obj.handleInputChange}
               placeholder={obj.placeholder}/>
             })}
           <hr/>
           <h2 style={{textAlign:'center'}}>Is this a private Competition?</h2>
           <IconInput img='./app/images/private.png' label='Private' id='private' infoTog={this.infoTog}
-            onOff={this.state.privateOn} inputVal={this.state.privateNum} handleInputChange={this.handleInputChange} placeholder='Create a password for others to use to join'/>
-          <Button style={{margin:'0 auto'}} type='submit'>Start Challenge</Button>
-        </form>
+            onOff={this.state.privateOn} inputVal={this.state.privateVal} handleInputChange={this.handleInputChange} placeholder='Create a password for others to use to join'/>
+          <Button style={{margin:'0 auto'}} onClick={()=>this.submitChallenge()}>Start Challenge</Button>
+        </section>
       </div>
     )
   }

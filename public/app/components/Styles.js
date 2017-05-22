@@ -75,4 +75,5 @@ export const Icon  = styled.img`
 export const AmountInput = styled.input`
   height: 25px;
   width: 100%;
+  margin-top: 5px;
 `

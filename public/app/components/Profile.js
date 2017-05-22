@@ -173,7 +173,9 @@ class Profile extends Component {
       lastSync:'',
       isModalOpen: false,
     }
-    this.setNav = this.setNav.bind(this)
+    this.setNav = this.setNav.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.openModal = this.openModal.bind(this);
   }
 
   // Set up Navbar Links that will be sent to the App component to update Navbar. Called in Component Did Mount
@@ -221,7 +223,7 @@ class Profile extends Component {
     return(
       <div style={{width:'100%', height:'100%'}}>
         <Modal isOpen={this.state.isModalOpen} onClose={() => this.closeModal()}>
-          <ChallengeSignUp />
+          <ChallengeSignUp closeModal={this.closeModal}/>
         </Modal>
         <ProfileHeader profile={this.state.profile} lastSync={this.state.lastSync} openModal={() => this.openModal()}/>
       </div>
