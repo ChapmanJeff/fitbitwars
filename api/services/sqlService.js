@@ -219,6 +219,68 @@ module.exports = {
     })
 
     return dfd.promise;
+  },
+
+  saveNewChallenge (req, res) {
+
+    db.challenges.save({
+      steps_on: req.body.stepsOn,
+      steps_val: req.body.stepsVal,
+      floors_on: req.body.floorsOn,
+      floors_val: req.body.floorsVal,
+      distance_on: req.body.distanceOn,
+      distance_val: req.body.distanceVal,
+      calories_on: req.body.caloriesOn,
+      calories_val: req.body.caloriesVal,
+      minutes_on: req.body.minutesOn,
+      minutes_val: req.body.minutesVal,
+      private_on:req.body.privateOn,
+      private_val:req.body.privateVal,
+      challenge_val: req.body.challengeVal,
+      bet_val: req.body.betVal,
+      start_date: req.body.startDateVal,
+      end_date: req.body.endDateVal,
+      created_by: req.user.user_id,
+    }, (dbErr, dbRes)=> {
+      if (dbErr) {
+        console.log('dbErr saveChallengeErr', dbErr)
+        res.status(500).send(new Error(dbErr))
+      } else {
+        console.log('dbRes saveChallenge', dbRes)
+        //Now take the new challenge and make creator a user in the challenge_users table
+        db.challenge_users.save({
+          challenge_id: dbRes.challenge_id,
+          user_id: dbRes.created_by
+        }, (dbErr, dbRes)=> {
+          if (dbErr) {
+            console.log('dbErr saveChallengeUserErr', dbErr)
+            res.status(500).send(new Error(dbErr));
+          } else {
+            console.log('dbRes saveChallengeUser', dbRes)
+            res.status(200).send('Successfully Saved New Challenge and added Creator to challenge_users');
+          }
+        })
+      }
+    })
+  },
+
+//Calls to DB and pulls challenge info for challeges user has joined using an sql join table sends results to front
+  getUserChallenges(req, res) {
+    db.run("select * from challenges inner join challenge_users on challenge_users.challenge_id = challenges.challenge_id where challenge_users.user_id = $1"
+    ,[req.user.user_id], (dbErr, dbRes)=> {
+      if (dbErr) {
+        console.log('dbErr getUserChallengesErr', dbErr)
+        res.status(500).send(new Error(dbErr));
+      } else {
+        var editForFront = dbRes.map((challenge)=>{
+          //delete user id 
+          delete challenge.user_id;
+          return challenge
+        })
+        console.log('dbRes getUserChallenges', editForFront)
+        res.status(200).send(editForFront);
+      }
+    })
   }
 
 }

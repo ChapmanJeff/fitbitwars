@@ -12,5 +12,24 @@ module.exports = {
       .then((result)=>result.data)
   },
 
+  saveNewChallenge (challenge) {
+    return axios.post('/api/saveNewChallenge', challenge)
+    .then((response)=>{
+      return response.data;
+    })
+    .catch((error)=>{
+      console.log(error)
+    })
+  },
+
+  getUserChallenges () {
+    return axios.get('/api/getUserChallenges')
+      .then((response)=>{
+        return response.data;
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+  }
 
 }

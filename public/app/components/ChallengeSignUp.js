@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import {saveNewChallenge, getUserChallenges} from '../utils/api'
 import {Switch, Slider, InputSwitch, Icon, AmountInput, Button} from './Styles'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -63,7 +64,8 @@ class ChallengeSignUp extends Component {
       challengeVal: '',
       betVal: '',
       startDateVal: '',
-      endDateVal: ''
+      endDateVal: '',
+      userChallenges: ''
     }
 
     this.infoTog = this.infoTog.bind(this);
@@ -110,7 +112,7 @@ class ChallengeSignUp extends Component {
   }
 
 submitChallenge () {
-  event.preventDefault();
+  // event.preventDefault();
   let challenge = {
     stepsOn: this.state.stepsOn,
     stepsVal: this.state.stepsVal,
@@ -125,13 +127,13 @@ submitChallenge () {
     privateOn:this.state.privateOn,
     privateVal:this.state.privateVal,
     challengeVal: this.state.challengeVal,
-    betVal: this.state.challengeVal,
+    betVal: this.state.betVal,
     startDateVal: this.state.startDateVal,
     endDateVal: this.state.endDateVal
   };
   console.log(challenge)
   this.props.closeModal();
-
+  saveNewChallenge(challenge);
 }
 
 
@@ -167,7 +169,6 @@ submitChallenge () {
               onOff={obj.onOff} inputVal={obj.inputVal} handleInputChange={obj.handleInputChange}
               placeholder={obj.placeholder}/>
             })}
-          <hr/>
           <h2 style={{textAlign:'center'}}>Is this a private Competition?</h2>
           <IconInput img='./app/images/private.png' label='Private' id='private' infoTog={this.infoTog}
             onOff={this.state.privateOn} inputVal={this.state.privateVal} handleInputChange={this.handleInputChange} placeholder='Create a password for others to use to join'/>

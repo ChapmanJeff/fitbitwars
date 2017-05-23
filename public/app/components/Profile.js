@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {getProfile, getLastSync} from '../utils/api'
+import {getProfile, getLastSync, getUserChallenges} from '../utils/api'
 import Modal from './Modal'
 import ChallengeSignUp from './ChallengeSignUp'
 import TakeMoney from './StripeCheckout'
@@ -31,7 +31,6 @@ const BannerTop = styled(Banner)`
   background: linear-gradient(to right,#202229, #38618C 130%);
 `
 const ProfileHeader = ({profile, lastSync, openModal}) => {
-  console.log(openModal)
   return (
     <div className='profile-container' style={{backgroundColor:'white', borderBottom:'2px solid white',height:'100%',width:'100%', overflow:'hidden'}}>
       <BannerTop/>
@@ -140,7 +139,7 @@ const ProfileHeader = ({profile, lastSync, openModal}) => {
                 </div>
               </div>
 
-
+              
               <div className='current-challenges' style={{paddingBottom:'30px', borderBottom:'1px solid #f3f3f3', padding:'20px'}}>
                 <h1 style={{fontFamily:'Oswald', fontSize:'20px', fontWeight:'100', letterSpacing:'2px'}}>CURRENT CHALLENGES</h1>
                 <div className='sync-data' style={{width:'85%', borderRadius:'6px', margin:'15px auto', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
@@ -172,6 +171,7 @@ class Profile extends Component {
       profile: '',
       lastSync:'',
       isModalOpen: false,
+      userChallenges: ''
     }
     this.setNav = this.setNav.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -200,6 +200,14 @@ class Profile extends Component {
           profile
         }
       })
+      getUserChallenges()
+        .then((challenges)=>{
+          this.setState(()=>{
+            return {
+              userChallenges: challenges
+            }
+          })
+        })
     })
     getLastSync().then((lastSync)=>{
       console.log(lastSync)

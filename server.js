@@ -107,6 +107,12 @@ const profileCtrl = require('./api/controllers/profileCtrl');
 app.get('/api/profile', profileCtrl.removeTokens);
 
 
+// Takes users new challenge info from modal and saves to the DB
+const sqlService = require('./api/services/sqlService')
+app.post('/api/saveNewChallenge', sqlService.saveNewChallenge);
+//Called when user reached profile page or creates a new challenge to get challenges they've joined
+app.get('/api/getUserChallenges',sqlService.getUserChallenges)
+
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
