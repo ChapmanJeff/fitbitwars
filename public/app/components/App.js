@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Nav from './Nav'
 import Home from './Home'
 import Profile from './Profile'
+import ProfileCleanUp from './Profile Clean Up'
 import styled from 'styled-components'
 
 
@@ -44,6 +45,9 @@ class App extends Component {
           <Switch>
             <Route exact path='/' component={Home} />
             <Route path='/profile' render={()=> <Profile
+                  updateNav={this.changeNavLinks}
+                  updateProfile={this.changeProfileInfo}/>} />
+            <Route path='/challenges' render={()=> <ProfileCleanUp
                   updateNav={this.changeNavLinks}
                   updateProfile={this.changeProfileInfo}/>} />
             <Route render={()=>(<p>Not Found</p>)} />

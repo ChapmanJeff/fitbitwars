@@ -139,7 +139,7 @@ const ProfileHeader = ({profile, lastSync, openModal}) => {
                 </div>
               </div>
 
-              
+
               <div className='current-challenges' style={{paddingBottom:'30px', borderBottom:'1px solid #f3f3f3', padding:'20px'}}>
                 <h1 style={{fontFamily:'Oswald', fontSize:'20px', fontWeight:'100', letterSpacing:'2px'}}>CURRENT CHALLENGES</h1>
                 <div className='sync-data' style={{width:'85%', borderRadius:'6px', margin:'15px auto', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>

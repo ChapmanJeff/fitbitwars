@@ -115,27 +115,28 @@ submitChallenge () {
   // event.preventDefault();
   let challenge = {
     stepsOn: this.state.stepsOn,
-    stepsVal: this.state.stepsVal,
+    stepsVal: this.state.stepsVal === '' ? null : this.state.stepsVal,
     floorsOn: this.state.floorsOn,
-    floorsVal: this.state.floorsVal,
+    floorsVal: this.state.floorsVal === '' ? null : this.state.floorsVal,
     distanceOn: this.state.distanceOn,
-    distanceVal: this.state.distanceVal,
+    distanceVal: this.state.distanceVal === '' ? null : this.state.distanceVal,
     caloriesOn: this.state.caloriesOn,
-    caloriesVal: this.state.caloriesVal,
+    caloriesVal: this.state.caloriesVal === '' ? null : this.state.caloriesVal,
     minutesOn: this.state.minutesOn,
-    minutesVal: this.state.minutesVal,
+    minutesVal: this.state.minutesVal === '' ? null : this.state.minutesVal,
     privateOn:this.state.privateOn,
     privateVal:this.state.privateVal,
     challengeVal: this.state.challengeVal,
-    betVal: this.state.betVal,
+    betVal: this.state.betVal === '' ? null : this.state.betVal,
     startDateVal: this.state.startDateVal,
     endDateVal: this.state.endDateVal
   };
   console.log(challenge)
-  this.props.closeModal();
-  saveNewChallenge(challenge);
+  saveNewChallenge(challenge)
+    .then((saved)=> {
+      this.props.closeModal();
+    })
 }
-
 
   render() {
     var activityInputs = [

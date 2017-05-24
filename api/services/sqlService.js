@@ -241,6 +241,7 @@ module.exports = {
       start_date: req.body.startDateVal,
       end_date: req.body.endDateVal,
       created_by: req.user.user_id,
+      active: true
     }, (dbErr, dbRes)=> {
       if (dbErr) {
         console.log('dbErr saveChallengeErr', dbErr)
@@ -266,15 +267,16 @@ module.exports = {
 
 //Calls to DB and pulls challenge info for challeges user has joined using an sql join table sends results to front
   getUserChallenges(req, res) {
-    db.run("select * from challenges inner join challenge_users on challenge_users.challenge_id = challenges.challenge_id where challenge_users.user_id = $1"
+    db.run("select * from challenges inner join challenge_users on challenge_users.challenge_id = challenges.challenge_id where challenge_users.user_id = $1 and challenges.active = 'true' order by challenges.start_date asc"
     ,[req.user.user_id], (dbErr, dbRes)=> {
       if (dbErr) {
         console.log('dbErr getUserChallengesErr', dbErr)
         res.status(500).send(new Error(dbErr));
       } else {
         var editForFront = dbRes.map((challenge)=>{
-          //delete user id 
+          //delete user id
           delete challenge.user_id;
+          delete challenge.created_by;
           return challenge
         })
         console.log('dbRes getUserChallenges', editForFront)
