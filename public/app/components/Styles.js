@@ -71,9 +71,34 @@ export const Icon  = styled.img`
   height: 50px;
   width: 50px;
 `
+export const SmallerIcon = styled(Icon)`
+  height: 35px;
+  width: 35px;
+`
 
 export const AmountInput = styled.input`
   height: 25px;
   width: 100%;
   margin-top: 5px;
+`
+
+export const Banner = styled.section`
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top ;
+  background-image: url('./app/images/Portrait.jpg');
+  height:10%;
+  align-items: center;
+  border-bottom:1px solid #cbc9cf;
+`
+export const BannerTop = styled(Banner)`
+  background-image: none;
+  background: linear-gradient(to right,#202229, #38618C 130%);
+`
+
+export const MainContainerWhite = styled.section`
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
 `

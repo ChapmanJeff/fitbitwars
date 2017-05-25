@@ -241,7 +241,8 @@ module.exports = {
       start_date: req.body.startDateVal,
       end_date: req.body.endDateVal,
       created_by: req.user.user_id,
-      active: true
+      active: true,
+      contenders_val: 1
     }, (dbErr, dbRes)=> {
       if (dbErr) {
         console.log('dbErr saveChallengeErr', dbErr)
@@ -282,6 +283,13 @@ module.exports = {
         console.log('dbRes getUserChallenges', editForFront)
         res.status(200).send(editForFront);
       }
+    })
+  },
+
+  //Called from server.js app.get('/api/getAllChallenges'). Gets all challenges from challenge table in Db and returns active by date asc
+  getAllChallenges (req, res) {
+    db.run("select * from challenges where active = 'true' order by start_date asc", (dbErr, dbRes)=> {
+      console.log(dbErr, dbRes)
     })
   }
 

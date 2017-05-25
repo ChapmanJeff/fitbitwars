@@ -30,6 +30,16 @@ module.exports = {
       .catch((error)=>{
         console.log(error)
       })
-  }
+  },
+
+  getChallenges () {
+    return axios.get('/api/getAllChallenges')
+      .then((response)=> {
+        return response.data;
+      })
+      .catch((error)=> {
+        console.log(error)
+      })
+  },
 
 }

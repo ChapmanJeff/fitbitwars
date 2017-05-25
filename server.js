@@ -31,7 +31,7 @@ app.use((err,req,res,next)=>{
 
 
 //********* CONNECT DB **********//
-const massiveInstance = massive.connectSync({connectionString: 'postgres://dcvefcsk:gyoVRfOTinceDj0BRRK5gZtT5sFHQnxl@hard-plum.db.elephantsql.com:5432/dcvefcsk'})
+const massiveInstance = massive.connectSync({connectionString: config.database.connection})
 app.set('db', massiveInstance);
 const db = app.get('db');
 
@@ -112,7 +112,8 @@ const sqlService = require('./api/services/sqlService')
 app.post('/api/saveNewChallenge', sqlService.saveNewChallenge);
 //Called when user reached profile page or creates a new challenge to get challenges they've joined
 app.get('/api/getUserChallenges',sqlService.getUserChallenges)
-
+//Called when user goes to challenges page. Retrieves all challenges from DB in order asc and active
+app.get('/api/getAllChallenges', sqlService.getAllChallenges)
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);
