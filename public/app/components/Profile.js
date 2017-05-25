@@ -205,7 +205,6 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props)
     this.setNav();
     getProfile().then((profile)=>{
       console.log(123, profile)
@@ -252,7 +251,9 @@ class Profile extends Component {
       })
   }
 
+
   render() {
+    console.log(11,this.props.location)
     var profile = this.state.profile;
     var lastSync = this.state.lastSync;
 console.log(this.state.userChallenges)

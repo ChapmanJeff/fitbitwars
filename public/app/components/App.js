@@ -4,6 +4,7 @@ import Nav from './Nav'
 import Home from './Home'
 import Profile from './Profile'
 import Challenges from './Challenges'
+import SingleChallenge from './SingleChallenge'
 import styled from 'styled-components'
 
 
@@ -44,10 +45,19 @@ class App extends Component {
           <Nav links={this.state.navLinks} profile={this.state.profileInfo}/>
           <Switch>
             <Route exact path='/' component={Home} />
-            <Route path='/profile' render={()=> <Profile
+            <Route path='/profile' render={({match, location})=> <Profile
                   updateNav={this.changeNavLinks}
-                  updateProfile={this.changeProfileInfo}/>} />
-            <Route exact path='/challenges' component={Challenges} />
+                  updateProfile={this.changeProfileInfo}
+                  location={location}
+                  match={match}/>} />
+            <Route exact path='/challenges' render={({match, location})=> <Challenges
+                  updateNav={this.changeNavLinks}
+                  updateProfile={this.changeProfileInfo}
+                  location={location}
+                  match={match}/>} />
+            <Route path='/challenges/' render={({match, location})=> <SingleChallenge
+                  location={location}
+                  match={match}/>}/>
             <Route render={()=>(<p>Not Found</p>)} />
           </Switch>
         </div>

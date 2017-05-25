@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
 
 export const Button = styled.button`
   border: none;
@@ -13,6 +14,28 @@ export const Button = styled.button`
   color: white;
   box-shadow: 2px 2px 5px black;
   cursor: pointer;
+`
+export const DetailsLink = styled(Link)`
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 3px;
+  padding: 4px;
+  ${''/* margin: 10px; */}
+  width: 150px;
+  font-family: Oswald;
+  letter-spacing: 2px;
+  font-size: 15px;
+  background-color: white;
+  cursor: pointer;
+  color: #4A5153;
+  border: .5px solid #4A5153;
+
+  &:hover {
+    background:linear-gradient(#35a7ff, #38618C);
+    color:white;
+    border: 1px solid black;
+  }
 `
 
 // *** Next 3:Switch, Slider and InputSwitch are used together and cannot be used independently. They create the slider checkbox input used in modals ***//

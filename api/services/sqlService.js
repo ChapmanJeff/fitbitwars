@@ -289,7 +289,11 @@ module.exports = {
   //Called from server.js app.get('/api/getAllChallenges'). Gets all challenges from challenge table in Db and returns active by date asc
   getAllChallenges (req, res) {
     db.run("select * from challenges where active = 'true' order by start_date asc", (dbErr, dbRes)=> {
-      console.log(dbErr, dbRes)
+      if (dbErr) {
+        res.status(500).send(new Error(dbErr))
+      } else {
+        res.status(200).send(dbRes)
+      }
     })
   }
 
