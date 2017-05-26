@@ -3,18 +3,17 @@ import PropTypes from 'prop-types'
 import queryString from 'query-string'
 import styled from 'styled-components'
 import {MainContainerWhite, BannerTop, Icon, JoinButton} from './Styles'
-import {getPlayers, getChallengeInfo} from '../utils/api'
+import {getPlayers, getChallengeInfo, addPlayer, removePlayer} from '../utils/api'
 import moment from 'moment'
 
 
 
-const TitleGoals = ({title, challengeInfo, players}) => {
-  console.log(19191,challengeInfo)
+const TitleGoals = ({title, challengeInfo, players, userIncluded, handleRemovePlayer, handleAddPlayer}) => {
   return (
     <div className='titleGoals' style={{display:'flex', flexDirection:'column', alignItems:'center', marginBottom:'30px'}}>
       <h2 style={{fontSize:'35px', fontFamily:'Raleway', marginTop:'25px'}}>{title}</h2>
       <h2 style={{margin:'10px 0px', color:'#ff951c', fontFamily:'Raleway'}}>{moment(challengeInfo.start_date).format("MMM Do, YYYY")} - {moment(challengeInfo.end_date).format("MMM Do, YYYY")}</h2>
-      {challengeInfo ? <JoinButton onClick={()=>console.log('testing')}>JOIN CHALLENGE</JoinButton> : <JoinButton>Leave Challenge</JoinButton>}
+      {userIncluded ? <JoinButton onClick={()=>handleRemovePlayer(challengeInfo.challenge_id)}>Leave Challenge</JoinButton> : <JoinButton onClick={()=>handleAddPlayer(challengeInfo.challenge_id)}>JOIN CHALLENGE</JoinButton>}
       <div className='challenge-criteria' style={{display:'flex', padding:'15px', justifyContent:'space-around', textAlign:'center', width:'100%', width:'60%', marginTop:'15px'}}>
         {challengeInfo.steps_on ? <div className='steps'>
           <Icon src={challengeInfo.steps_on ? '/./app/images/icon steps.png': '/./app/images/icon steps disabled.png'}/>
@@ -54,7 +53,10 @@ const TitleGoals = ({title, challengeInfo, players}) => {
 TitleGoals.propTypes = {
   title: PropTypes.string.isRequired,
   challengeInfo: PropTypes.object.isRequired,
-  players: PropTypes.array.isRequired
+  players: PropTypes.array.isRequired,
+  userIncluded: PropTypes.bool.isRequired,
+  handleRemovePlayer: PropTypes.func.isRequired,
+  handleAddPlayer: PropTypes.func.isRequired,
 }
 
 
@@ -65,8 +67,11 @@ class SingleChallenge extends Component {
     this.state = {
       players: [],
       challengeInfo: {},
+      userIncluded: false
     }
 
+    this.handleRemovePlayer = this.handleRemovePlayer.bind(this);
+    this.handleAddPlayer = this.handleAddPlayer.bind(this);
   }
 
   componentDidMount () {
@@ -80,11 +85,45 @@ class SingleChallenge extends Component {
         })
       })
     getPlayers(challengeQueryString.id)
-    .then((players)=>{
+    .then((playerInfo)=>{
+      console.log(playerInfo)
       this.setState(()=>{
         return {
-          players
+          players: playerInfo.players,
+          userIncluded: playerInfo.userInChallenge
         }
+      })
+    })
+  }
+
+  handleRemovePlayer (id) {
+    removePlayer(id)
+    .then((res)=> {
+      getPlayers(id)
+      .then((playerInfo)=>{
+        console.log(playerInfo)
+        this.setState(()=>{
+          return {
+            players: playerInfo.players,
+            userIncluded: playerInfo.userInChallenge
+          }
+        })
+      })
+    })
+  }
+
+  handleAddPlayer (id) {
+    addPlayer(id)
+    .then((res)=> {
+      getPlayers(id)
+      .then((playerInfo)=>{
+        console.log(playerInfo)
+        this.setState(()=>{
+          return {
+            players: playerInfo.players,
+            userIncluded: playerInfo.userInChallenge
+          }
+        })
       })
     })
   }
@@ -97,7 +136,7 @@ class SingleChallenge extends Component {
     return (
       <MainContainerWhite>
         <BannerTop />
-        <TitleGoals title={title} players={this.state.players} challengeInfo={this.state.challengeInfo} />
+        <TitleGoals title={title} players={this.state.players} handleAddPlayer={this.handleAddPlayer} handleRemovePlayer={this.handleRemovePlayer} challengeInfo={this.state.challengeInfo} userIncluded={this.state.userIncluded}/>
 
       </MainContainerWhite>
     )

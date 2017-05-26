@@ -311,10 +311,52 @@ module.exports = {
   // Fetch players in a specific challenge and if current user is in challenge add boolean true property
   //NEED TO JOIN NEW TABLE OF COMPLETIONS OR FAILURES //NEED TO TEST WITH MULTIPLE USERS
   getPlayers (req, res) {
+    console.log(req.user.user_id)
     db.run("select p.firstname, p.displayname, p.avatar, p.avatar150, c.challenge_id, c.user_id from profile p inner join challenge_users c on p.user_id = c.user_id where c.challenge_id = $1"
       ,[req.query.id], (dbErr, dbRes)=> {
       if (dbErr) {
         res.status(500).send(new Error(dbErr))
+      } else {
+        console.log(dbRes)
+        //See if current user is already in challenge
+        var userOnList = dbRes.filter((el)=>{
+        	return el.user_id === req.user.user_id
+        })
+        if (userOnList[0]) {
+          res.status(200).send({
+            userInChallenge: true,
+            players: dbRes
+          })
+        } else {
+          res.status(200).send({
+            userInChallenge: false,
+            players: dbRes
+          })
+        }
+      }
+    })
+  },
+
+  removePlayerFromChallenge (req, res) {
+    console.log(req.query, req.user.user_id)
+    db.run("delete from challenge_users where challenge_id = $1 and user_id = $2",[req.query.id, req.user.user_id], (dbErr,dbRes)=> {
+      if (dbErr) {
+        res.status(500).send(new Error(dbErr))
+      } else {
+        res.status(200).send(dbRes)
+      }
+    })
+  },
+
+  addPlayerToChallenge (req, res) {
+    console.log(111, req.body.id, req.user.user_id)
+    db.challenge_users.save({
+      challenge_id: req.body.id,
+      user_id: req.user.user_id
+    }, (dbErr, dbRes)=>{
+      if (dbErr) {
+        console.log(222,dbErr)
+        res.status(500).send(new Error(dbErr.message))
       } else {
         console.log(dbRes)
         res.status(200).send(dbRes)

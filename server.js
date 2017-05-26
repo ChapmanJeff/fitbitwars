@@ -118,6 +118,10 @@ app.get('/api/getAllChallenges', sqlService.getAllChallenges)
 app.get('/api/getChallengeInfo', sqlService.getChallengeInfo)
 //On individual challenge page take query param and pass it here in order to retireve players and their info for specific challenge
 app.get('/api/getPlayers', sqlService.getPlayers)
+//From Individual challenge page. After clicking Leave Challenge Challenge Id is sent and sqlService needs to delete the user from the challenge
+app.delete('/api/removePlayerFromChallenge', sqlService.removePlayerFromChallenge)
+//From Individual challenge page. After clicking Join Challenge, challenge_id is sent to sqlService to add user to challenge
+app.post('/api/addPlayerToChallenge', sqlService.addPlayerToChallenge)
 
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');

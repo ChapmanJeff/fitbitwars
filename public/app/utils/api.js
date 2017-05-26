@@ -60,6 +60,27 @@ module.exports = {
       .catch((error)=> {
         console.log(error)
       })
-  }
+  },
+
+  removePlayer (id) {
+    console.log(id)
+    return axios.delete('/api/removePlayerFromChallenge',{params:{id:id}})
+    .then((response)=> {
+      return response.data;
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+  },
+
+  addPlayer(id) {
+    return axios.post('/api/addPlayerToChallenge',{id:id})
+    .then((response)=> {
+      return response.data;
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+  },
 
 }
