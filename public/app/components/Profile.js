@@ -91,7 +91,7 @@ const CurrentChallenges = ({userChallenges})=> {
 }
 
 CurrentChallenges.propTypes = {
-  userChallenges: PropTypes.array.isRequired,
+  userChallenges: PropTypes.array,
 }
 
 const LastSync = ({lastSync}) => {
@@ -161,7 +161,7 @@ const ProfileInfo = ({profile}) => {
     <div style={{height:'100%', width:'100%'}}>
       <img src={profile.avatar150 ? profile.avatar150 : './app/images/penguin-avatar.jpeg'} style={{borderRadius:'100px', border:'2px solid #35a7ff', marginTop:'-90px'}}/>
       <div style={{marginTop:'25px'}}>
-        {profile.stripe_connected ? <h2 style={{fontFamily:'Raleway'}}>Stripe Connected <br/><img style={{heigh:'25px', width:'25px'}} src='./app/images/checkmark.png'/></h2> : <TakeMoney />}
+        {profile.stripe_connected ? <h2 style={{fontFamily:'Raleway'}}>Payments Connected <br/><img style={{heigh:'25px', width:'25px'}} src='./app/images/checkmark.png'/></h2> : <TakeMoney />}
       </div>
       <div className='stats' style={{display:'flex', justifyContent:'space-between', marginTop:'35px', borderBottom:'2px solid #f3f3f3', paddingBottom:'20px'}}>
         <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', marginRight:'10px'}}>

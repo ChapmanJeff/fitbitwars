@@ -115,13 +115,17 @@ export const InputSwitch = styled.input`
 export const Icon  = styled.img`
   height: 50px;
   width: 50px;
+  border-radius: 100%;
 `
 export const SmallerIcon = styled(Icon)`
   height: 35px;
   width: 35px;
+  border-radius: 100%;
 `
 export const LargeIcon = styled.img`
   width:75px;
+  height: 75px;
+  border-radius: 100%;
 `
 
 export const AmountInput = styled.input`

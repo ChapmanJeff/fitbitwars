@@ -85,8 +85,12 @@ module.exports = {
       if (dbErr) {
         console.log(dbErr)
       }
-      delete dbRes[0].user_id;
-      dfd.resolve(dbRes[0])
+      if (dbRes[0]) {
+        delete dbRes[0].user_id;
+        dfd.resolve(dbRes[0])
+      } else {
+        dfd.resolve(dfd.Res)
+      }
     })
     return dfd.promise;
 
@@ -242,7 +246,8 @@ module.exports = {
       end_date: req.body.endDateVal,
       created_by: req.user.user_id,
       active: true,
-      contenders_val: 1
+      current_payout: 0,
+
     }, (dbErr, dbRes)=> {
       if (dbErr) {
         console.log('dbErr saveChallengeErr', dbErr)

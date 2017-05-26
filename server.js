@@ -146,7 +146,7 @@ app.post('/api/fitbit-notifications', (req, res) => {
   });
 })
 
-// Access Tokens only last 8 hrs. This runs every 45 min to update them
+// Access Tokens only last 8 hrs. This runs every 45 min to update them if they are within an hour of expiring
 function updateTokens () {
   console.log("UPDATING Access Tokens")
   db.run("select * from profile", (dbErr, profilesArr)=> {
