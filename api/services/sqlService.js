@@ -295,6 +295,31 @@ module.exports = {
         res.status(200).send(dbRes)
       }
     })
-  }
+  },
+
+  //Take challenge ID and get challenge info from DB and return
+  getChallengeInfo (req, res) {
+    db.run("select * from challenges where challenge_id = $1", [req.query.id],(dbErr, dbRes)=> {
+      if (dbErr) {
+        res.status(500).send(new Error(dbErr))
+      } else {
+        res.status(200).send(dbRes)
+      }
+    })
+  },
+
+  // Fetch players in a specific challenge and if current user is in challenge add boolean true property
+  //NEED TO JOIN NEW TABLE OF COMPLETIONS OR FAILURES //NEED TO TEST WITH MULTIPLE USERS
+  getPlayers (req, res) {
+    db.run("select p.firstname, p.displayname, p.avatar, p.avatar150, c.challenge_id, c.user_id from profile p inner join challenge_users c on p.user_id = c.user_id where c.challenge_id = $1"
+      ,[req.query.id], (dbErr, dbRes)=> {
+      if (dbErr) {
+        res.status(500).send(new Error(dbErr))
+      } else {
+        console.log(dbRes)
+        res.status(200).send(dbRes)
+      }
+    })
+  },
 
 }

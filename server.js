@@ -114,6 +114,11 @@ app.post('/api/saveNewChallenge', sqlService.saveNewChallenge);
 app.get('/api/getUserChallenges',sqlService.getUserChallenges)
 //Called when user goes to challenges page. Retrieves all challenges from DB in order asc and active
 app.get('/api/getAllChallenges', sqlService.getAllChallenges)
+//On individual challenge page take query param and pass it here in order to retireve specific challenge info from db
+app.get('/api/getChallengeInfo', sqlService.getChallengeInfo)
+//On individual challenge page take query param and pass it here in order to retireve players and their info for specific challenge
+app.get('/api/getPlayers', sqlService.getPlayers)
+
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
 app.get('/api/dailyActivity', fitbitCtrl.getDailyActivity);

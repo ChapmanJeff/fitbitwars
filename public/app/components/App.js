@@ -55,7 +55,7 @@ class App extends Component {
                   updateProfile={this.changeProfileInfo}
                   location={location}
                   match={match}/>} />
-            <Route path='/challenges/' render={({match, location})=> <SingleChallenge
+            <Route path='/challenges/challenge' render={({match, location})=> <SingleChallenge
                   location={location}
                   match={match}/>}/>
             <Route render={()=>(<p>Not Found</p>)} />

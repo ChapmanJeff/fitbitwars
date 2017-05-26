@@ -37,6 +37,28 @@ export const DetailsLink = styled(Link)`
     border: 1px solid black;
   }
 `
+export const JoinButton = styled.button`
+text-align: center;
+text-decoration: none;
+border: none;
+border-radius: 3px;
+padding: 4px;
+${''/* margin: 10px; */}
+width: 150px;
+font-family: Oswald;
+letter-spacing: 2px;
+font-size: 15px;
+background-color: white;
+cursor: pointer;
+color: #4A5153;
+border: .5px solid #4A5153;
+
+&:hover {
+  background:linear-gradient(#35a7ff, #38618C);
+  color:white;
+  border: 1px solid black;
+}
+`
 
 // *** Next 3:Switch, Slider and InputSwitch are used together and cannot be used independently. They create the slider checkbox input used in modals ***//
 export const Switch = styled.label`
@@ -97,6 +119,9 @@ export const Icon  = styled.img`
 export const SmallerIcon = styled(Icon)`
   height: 35px;
   width: 35px;
+`
+export const LargeIcon = styled.img`
+  width:75px;
 `
 
 export const AmountInput = styled.input`

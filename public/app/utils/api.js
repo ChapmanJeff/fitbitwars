@@ -2,7 +2,7 @@ import axios from 'axios'
 
 module.exports = {
 
-  getProfile: ()=> {
+  getProfile () {
     return axios.get('/api/profile')
       .then((result)=>result.data)
   },
@@ -41,5 +41,25 @@ module.exports = {
         console.log(error)
       })
   },
+
+  getChallengeInfo(id) {
+    return axios(`/api/getChallengeInfo?id=${id}`)
+      .then((response)=> {
+        return response.data[0];
+      })
+      .catch((error)=> {
+        console.log(error)
+      })
+  },
+
+  getPlayers (id) {
+    return axios.get(`/api/getPlayers?id=${id}`)
+      .then((response)=> {
+        return response.data;
+      })
+      .catch((error)=> {
+        console.log(error)
+      })
+  }
 
 }

@@ -6,7 +6,7 @@ import moment from 'moment'
 import styled from 'styled-components'
 import {BannerTop, MainContainerWhite, Icon, SmallerIcon, DetailsLink} from './Styles'
 
-const ChallengeLookup = ({challenges, updateSearchQuery, searchQuery}) => {
+const ChallengeLookup = ({challenges, updateSearchQuery, searchQuery, match}) => {
   var filterByName = (query) => {
     return challenges.filter((el)=>{
       return el.challenge_val.toLowerCase().indexOf(query.toLowerCase()) > -1;
@@ -78,7 +78,10 @@ const ChallengeLookup = ({challenges, updateSearchQuery, searchQuery}) => {
                 </div>
               </div>
                 <div className='joinChallenge' style={{alignItems:'center', display:'flex', justifyContent:'center'}}>
-                  <DetailsLink to={`/challenges/${challenge.challenge_id}/${challenge.challenge_val}`}>See Details</DetailsLink>
+                  <DetailsLink to={{
+                    pathname: `${match.url}/challenge`,
+                    search: `?id=${challenge.challenge_id}&name=${challenge.challenge_val}`
+                  }}>See Details</DetailsLink>
                 </div>
             </div>
           )
@@ -143,7 +146,8 @@ class Challenges extends Component {
   render() {
     return (
       <MainContainerWhite >
-        <ChallengeLookup challenges={this.state.challenges} searchQuery ={this.state.searchQuery} updateSearchQuery={this.updateSearchQuery}/>
+        <ChallengeLookup challenges={this.state.challenges} searchQuery ={this.state.searchQuery}
+          updateSearchQuery={this.updateSearchQuery} match={this.props.match}/>
       </MainContainerWhite>
     )
   }

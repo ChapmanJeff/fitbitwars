@@ -67,7 +67,7 @@ const MainLinks = ({pageLinks}) => {
           </Li>
         }
         return <Li key={key}>
-          <StyledNavLink to={pageLinks[key]}>
+          <StyledNavLink exact to={pageLinks[key]}>
             {key}
           </StyledNavLink>
         </Li>
