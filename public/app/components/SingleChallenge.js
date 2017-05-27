@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import queryString from 'query-string'
 import styled from 'styled-components'
 import {MainContainerWhite, BannerTop, Icon, JoinButton} from './Styles'
-import {getPlayers, getChallengeInfo, addPlayer, removePlayer} from '../utils/api'
+import {getPlayers, getChallengeInfo, addPlayer, removePlayer,test} from '../utils/api'
 import moment from 'moment'
 
 const H2Title = styled.h2`
@@ -23,12 +23,12 @@ const LeaderBoard = ({players, challengeInfo}) => {
     <div className='LeaderBoard-container' style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
       <h2 style={{fontFamily:'Oswald', letterSpacing:'2px', textAlign:'center', fontSize:'18px'}}>LEADER BOARD</h2>
       <div className='leaderboard-tile' style={{width:'80%', margin:'20px', border:'1px solid #f3f3f3', borderRadius:'6px', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
-        <div className='tile-top' style={{borderBottom:'1px solid #f3f3f3', display:'flex',textAlign:'center'}}>
+        <div className='tile-top' style={{backgroundColor:'#f8f8f8', borderBottom:'2px solid #f3f3f3', display:'flex',textAlign:'center'}}>
           <div className='top-left' style={{width:'30%', padding:'10px'}}>
             <H2Title style={{color:'#37ce46'}}>${challengeInfo.current_payout}</H2Title>
             <H2SubTitle>Current Payout</H2SubTitle>
           </div>
-          <div className='top-center' style={{borderLeft:'2px dotted #f3f3f3', borderRight:'2px dotted #f3f3f3', width:'40%', padding:'10px'}}>
+          <div className='top-center' style={{borderLeft:'2px solid #f3f3f3', borderRight:'3px solid #f3f3f3', width:'40%', padding:'10px'}}>
             <H2Title style={{color:'#3596ff'}}>{players.length}</H2Title>
             <H2SubTitle>Contenders</H2SubTitle>
           </div>
@@ -37,10 +37,29 @@ const LeaderBoard = ({players, challengeInfo}) => {
             <H2SubTitle>Daily Bet Amount</H2SubTitle>
           </div>
         </div>
-        <div className='tile-bottom' style={{height:'50vh', width:'100%', overflow:'scroll'}}>
+        <div className='tile-bottom' style={{maxHeight:'50vh', width:'100%', overflow:'scroll'}}>
 
 
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
+          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
+            <div>
+              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
+              <h2>John W.</h2>
+            </div>
+            <div>
+              <H2Title>2</H2Title>
+              <H2SubTitle>Days Achieved</H2SubTitle>
+            </div>
+            <div>
+              <H2Title>2</H2Title>
+              <H2SubTitle>Days Failed</H2SubTitle>
+            </div>
+            <div>
+              <H2Title style={{color:'red'}}>$200</H2Title>
+              <H2SubTitle>Amount Paid</H2SubTitle>
+            </div>
+          </div>
+
+          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
             <div>
               <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
               <h2>John W.</h2>
@@ -55,7 +74,7 @@ const LeaderBoard = ({players, challengeInfo}) => {
             </div>
           </div>
 
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
+          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
             <div>
               <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
               <h2>John W.</h2>
@@ -69,104 +88,8 @@ const LeaderBoard = ({players, challengeInfo}) => {
               <H2SubTitle>Days Failed</H2SubTitle>
             </div>
           </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'1px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
+
+
 
         </div>
       </div>
@@ -259,6 +182,7 @@ class SingleChallenge extends Component {
   }
 
   componentDidMount () {
+    test();
     var challengeQueryString = queryString.parse(this.props.location.search);
     getChallengeInfo(challengeQueryString.id)
       .then((challengeInfo)=>{

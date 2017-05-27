@@ -6,6 +6,7 @@ const massive = require('massive');
 const FitbitStrategy = require( 'passport-fitbit-oauth2' ).FitbitOAuth2Strategy;
 const moment = require('moment')
 const config = require('./config')
+const CronJob = require('cron').CronJob;
 const port = process.env.port || 8000;
 
 const app = express();
@@ -146,7 +147,7 @@ app.post('/api/fitbit-notifications', (req, res) => {
   });
 })
 
-// Access Tokens only last 8 hrs. This runs every 45 min to update them if they are within an hour of expiring
+// **INTERVAL**** Access Tokens only last 8 hrs. This runs every 45 min to update them if they are within an hour of expiring
 function updateTokens () {
   console.log("UPDATING Access Tokens")
   db.run("select * from profile", (dbErr, profilesArr)=> {
@@ -165,6 +166,30 @@ app.post('/api/stripeToken', stripeController.createCustomer)
 //To Test Charges uncomment below:
 // stripeController.chargeCustomer("3QWD5T", 1000, "This is a test")
 
+
+
+//********** CRON JOB - Updates all challenges, marks player accomplishments, charges if failed, marks ended challenges
+// Does this everday at 3:15am Pacific LA Time **********************
+const cronjob = require('./api/controllers/cronjob')
+app.get('/api/test', (req, res)=>{
+  cronjob.dailyUpdate()
+  .then((allChallenges)=> {
+    console.log(10, allChallenges)
+    res.send(allChallenges)
+  })
+})
+//var job = new CronJob('00 15 04 * * *', ()=>{
+var job = new CronJob('*/10 * * * * *', ()=>{
+    cronjob.dailyUpdate()
+      .then((allChallenges)=> {
+        console.log(10, allChallenges)
+        res.send(allChallenges)
+      })
+  },
+  null,
+  false,
+  'America/Los_Angeles'
+);
 
 
 app.listen(port, () => console.log(`listening on port ${port}`));

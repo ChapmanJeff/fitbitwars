@@ -83,4 +83,15 @@ module.exports = {
     })
   },
 
+  test() {
+    return axios.get('/api/test')
+    .then((response)=> {
+      console.log('TEST',response.data)
+      // return response.data;
+    })
+    .catch((error)=> {
+      console.log(error)
+    })
+  },
+
 }
