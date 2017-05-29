@@ -11,7 +11,8 @@ module.exports = {
       .then((allChallenges)=>{
         console.log(21,allChallenges,21)
         var results =[];
-        var solution = this.recursiveCall(allChallenges, results);
+        //Use Recursion to make sql calls without overwhelming my 5 connection max free elephant sql plan
+        var solution = this.getUsersAndGoals(allChallenges, results);
         console.log(5, q.all(solution))
         q.all(solution).then((solution2)=>{
           dfd.resolve(solution2)
@@ -75,7 +76,8 @@ module.exports = {
     return dfd.promise;
   },
 
-  recursiveCall (array, resultsArr) {
+//Elephantsql free plan only allows 5 connections. Using recursion i wait for calls to be sent back before sending the next call.
+  getUsersAndGoals (array, resultsArr) {
     console.log('Array at 0',array[0].challenge_id)
     // var dfrd= q.defer();
     var response = (array)=>{
@@ -90,6 +92,8 @@ module.exports = {
           console.log(4,{
             id: array[0].challenge_id,
             users: dbRes,
+            bet: array[0].bet_val,
+            endDate: array[0].end_date,
             goals: {
               steps: array[0].steps_val,
               floors: array[0].floors_val,
@@ -101,6 +105,8 @@ module.exports = {
           dfd.resolve({
             id: array[0].challenge_id,
             users: dbRes,
+            bet: array[0].bet_val,
+            endDate: array[0].end_date,
             goals: {
               steps: array[0].steps_val,
               floors: array[0].floors_val,
@@ -114,19 +120,6 @@ module.exports = {
       console.log('inner')
       return dfd.promise;
     }
-    // var a = () => {
-    //   var dfd = q.defer();
-    //   console.log(4)
-    //    setTimeout(()=>dfd.resolve('heelo'),2000)
-    //   return dfd.promise;
-    // }
-    //  return response
-    // return response(array)
-
-    // return q.all([response(array)]).then((res)=>{
-    //   console.log(6)
-    //   return res
-    // })
 
   return q.all([response(array)]).then((answer)=>{
       console.log(6,'answer', answer)
@@ -134,7 +127,7 @@ module.exports = {
       array.shift();
       if (array.length > 0) {
         console.log(7)
-        return this.recursiveCall(array, resultsArr)
+        return this.getUsersAndGoals(array, resultsArr)
       } else {
         console.log(8)
         return resultsArr;
@@ -152,7 +145,7 @@ module.exports = {
 // var allChallenges= [1,2,3,4];
 // var queryStr =
 // results= [];
-// function recursiveCall (array) {
+// function getUsersAndGoals (array) {
 //   var dfrd= q.defer();
 //     var response = ()=>{
 //       var dfd = q.defer();
@@ -182,7 +175,7 @@ module.exports = {
 //       results.push(answer);
 //       array.shift();
 //       if (array.length > 0) {
-//         return recursiveCall(array)
+//         return getUsersAndGoals(array)
 //       } else {
 //         return results;
 //       }
@@ -201,9 +194,9 @@ module.exports = {
 //     arry.shift();
 //     results.puish(resp);
 //     if (arry.length)
-//     return recursiveCall(url, arry, results).then(function(rep){return rep});
+//     return getUsersAndGoals(url, arry, results).then(function(rep){return rep});
 //     return results;
 //   })
 // }
 //
-// recursiveCall(url, ary, []);
+// getUsersAndGoals(url, ary, []);

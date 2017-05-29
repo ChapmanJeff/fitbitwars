@@ -72,7 +72,7 @@ passport.serializeUser((user, done)=>
 )
 
 passport.deserializeUser((user, done) => {
-  db.profile.findOne({user_id: user}, (err, user)=>{
+  db.profile.findOne({user_id: '3QWD5T2'}, (err, user)=>{
     return done(null, user);
   })
 })
@@ -123,6 +123,27 @@ app.get('/api/getPlayers', sqlService.getPlayers)
 app.delete('/api/removePlayerFromChallenge', sqlService.removePlayerFromChallenge)
 //From Individual challenge page. After clicking Join Challenge, challenge_id is sent to sqlService to add user to challenge
 app.post('/api/addPlayerToChallenge', sqlService.addPlayerToChallenge)
+
+
+
+//*****TEST API****//
+//Add User activity manually for test purposes
+app.post('/api/postTestData', (req, res)=> {
+  db.activity_summary.insert({
+    user_id: req.body.user_id,
+    summary_activeMinutes: req.body.activeMinutes,
+    summary_caloriesOut: req.body.caloriesOut,
+    summary_totalDistance: req.body.distance,
+    summary_floors: req.body.floors,
+    summary_steps: req.body.steps,
+    date: req.body.date
+  }, (dbErr, dbRes) => {
+    console.log(1, dbErr,2, dbRes);
+    if (dbRes) {
+      res.status(200).send(dbRes); //DOESNT SEND BUT DATA is getting to database.
+    }
+  })
+})
 
 //******* FITBIT ENDPOINTS **********//
 const fitbitCtrl = require('./api/controllers/fitbitCtrl');
@@ -191,7 +212,7 @@ var job = new CronJob('*/10 * * * * *', ()=>{
   'America/Los_Angeles'
 );
 
-
+console.log(moment('2017-05-28').format('YYYY-MM-D'), moment().format('YYYY-MM-D'), moment('2017-05-28').format('YYYY-MM-D') < moment().format('YYYY-MM-D'))
 app.listen(port, () => console.log(`listening on port ${port}`));
 
 
