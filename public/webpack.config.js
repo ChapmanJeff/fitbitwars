@@ -21,14 +21,14 @@ const config = {
     })
   ],
   devServer: {
-    proxy: [
-  {
-    context: ['/api/**', '/auth/**'],
-    target: 'http://localhost:8000',
-    changeOrgin: true,
-    secure: false
-  }
-],
+//     proxy: [
+//   {
+//     context: ['/api/**', '/auth/**'],
+//     target: 'http://localhost:8000',
+//     changeOrgin: true,
+//     secure: false
+//   }
+// ],
     historyApiFallback: true
   }
 };

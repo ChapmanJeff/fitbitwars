@@ -1,6 +1,6 @@
 const config = require('../../config')
-const keySecret = config.stripe.keySecret;
-const keyPublishable = config.stripe.keyPublishable;
+const keySecret = process.env.stripeKeySecretTest || config.stripe.keySecret;
+const keyPublishable = process.env.stripeKeyPublishableTest|| config.stripe.keyPublishable;
 const stripe = require('stripe')(keySecret)
 const sqlService = require('../services/sqlService');
 const q = require('q')

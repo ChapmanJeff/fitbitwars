@@ -32,7 +32,7 @@ app.use((err,req,res,next)=>{
 
 
 //********* CONNECT DB **********//
-const massiveInstance = massive.connectSync({connectionString: config.database.connection})
+const massiveInstance = massive.connectSync({connectionString: process.env.dbConnection || config.database.connection})
 app.set('db', massiveInstance);
 const db = app.get('db');
 
@@ -44,8 +44,8 @@ const userCtrl = require('./api/controllers/userCtrl');
 passport.use(new FitbitStrategy({
     clientID: process.env.clientID || config.fitbit.clientID,
     clientSecret: process.env.clientSecret || config.fitbit.clientSecret,
-    callbackURL: 'http://localhost:8000/auth/fitbit/callback'
-    //callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
+    // callbackURL: 'http://localhost:8000/auth/fitbit/callback'
+    callbackURL: "http://fitbitwars.azurewebsites.net/auth/fitbit/callback"
   },
   (accessToken, refreshToken, profile, done) => {
     db.profile.findOne({user_id: profile.id}, function(err,user){
