@@ -13,7 +13,7 @@ const app = express();
 
 
 //********* MIDDLEWARE **********//
-app.use(express.static('public'));
+app.use(express.static('public/dist'));
 
 app.use(bodyParser.json());
 
