@@ -57,7 +57,7 @@ const LeaderBoard = ({players, challengeInfo, challengeUsersInfo}) => {
                   <H2SubTitle>Days Failed</H2SubTitle>
                 </div>
                 <div style={{width:'25%'}}>
-                  <H2Title style={{color:'red'}}>${user.amount_paid ? user.amount_paid : 0}</H2Title>
+                  <H2Title style={{color:'#EE6352'}}>${user.amount_paid ? user.amount_paid : 0}</H2Title>
                   <H2SubTitle>Amount Paid</H2SubTitle>
                 </div>
               </div>

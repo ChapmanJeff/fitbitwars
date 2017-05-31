@@ -43,7 +43,7 @@ const CurrentChallenges = ({userChallenges})=> {
                     search: `?id=${challenge.challenge_id}&name=${challenge.challenge_val}`
                   }}>
                   <h2 style={{fontFamily:'Raleway', fontSize:'15px'}}>{challenge.challenge_val}</h2></Link>
-                    {challenge.active ? diffBetweenStartAndToday > 0 ? <h2 style={{color:'#ff951c', fontSize:'12px'}}>Starts in {diffBetweenStartAndToday} Hours</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}>Active - Ends {moment(challenge.end_date).format("MMM Do, YYYY")}</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}> Ended {moment(challenge.end_date).format('MMM Do, YYYY')}</h2>}
+                    {challenge.active ? diffBetweenStartAndToday > 0 ? <h2 style={{color:'#ff951c', fontSize:'12px'}}>Starts in {moment(challenge.start_date).diff(moment(moment().subtract(1,'days')), 'days')} Days - {moment(challenge.start_date).format('MMM Do, YYYY')}</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}>Day {moment().diff(moment(challenge.start_date), 'days')} of {moment(challenge.end_date).diff(moment(challenge.start_date), 'days')} - Ends {moment(challenge.end_date).format("MMM Do, YYYY")} </h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}> Ended {moment(challenge.end_date).format('MMM Do, YYYY')} </h2>}
                 </div>
               </div>
               <div className='challenge-top-right' style={{display:'flex', flexDirection:'column', justifyContent:'center', width:'30%', textAlign:'center'}}>
@@ -103,27 +103,27 @@ const LastSync = ({lastSync}) => {
         <div className='data' style={{display:'flex',justifyContent:'space-around', alignItems:'center', marginTop:'-20px', fontFamily:'Raleway', textAlign:'center', paddingBottom:'10px'}}>
           <div className='steps'>
             <Icon src='./app/images/icon steps.png'/>
-            <h2 style={{color:'#ff951c'}}>{lastSync.summary_steps}</h2>
+            <h2 style={{color:'#37ce46'}}>{lastSync.summary_steps}</h2>
             <h2>Steps</h2>
           </div>
           <div>
             <Icon src='./app/images/icon stairs.png'/>
-            <h2 style={{color:'#ff951c'}}>{lastSync.summary_floors}</h2>
+            <h2 style={{color:'#37ce46'}}>{lastSync.summary_floors}</h2>
             <h2>Floors</h2>
           </div>
           <div>
             <Icon src='./app/images/icon distance.png'/>
-            <h2 style={{color:'#ff951c'}}>{Math.round(lastSync.summary_totalDistance * 100)/100 || null}</h2>
+            <h2 style={{color:'#37ce46'}}>{Math.round(lastSync.summary_totalDistance * 100)/100 || null}</h2>
             <h2>Miles</h2>
           </div>
           <div>
             <Icon src='./app/images/icon fire.png'/>
-            <h2 style={{color:'#ff951c'}}>{lastSync.summary_caloriesOut}</h2>
+            <h2 style={{color:'#37ce46'}}>{lastSync.summary_caloriesOut}</h2>
             <h2>Calories</h2>
           </div>
           <div>
             <Icon src='./app/images/icon active.png'/>
-            <h2 style={{color:'#ff951c'}}>{lastSync.summary_activeMinutes}</h2>
+            <h2 style={{color:'#37ce46'}}>{lastSync.summary_activeMinutes}</h2>
             <h2>Minutes</h2>
           </div>
         </div>
@@ -140,12 +140,12 @@ LastSync.proptypes = {
 const Namebar = ({profile, openModal}) => {
   return (
     <section className='name-bar' style={{height:'15%', borderBottom:'1px solid #f3f3f3', display:'flex', justifyContent:'space-between'}}>
-      <div className='name-box'style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', marginLeft:'5%'}}>
-        <Titleh1>{profile.fullname || 'John Wyatt'}</Titleh1>
-        <p style={{fontFamily:'Raleway', letterSpacing:'2px', color:'#ff951c', fontSize:'20px'}}>Contender</p>
+      <div className='name-box'style={{height:'100%', width:'75%', display:'flex', flexDirection:'column', justifyContent:'center'}}>
+        <Titleh1 style={{paddingLeft:'5%'}}>{profile.fullname || 'John Wyatt'}</Titleh1>
+        <p style={{fontFamily:'Raleway', letterSpacing:'2px', color:'#F18F01', fontSize:'20px', paddingLeft:'5%'}}>Contender</p>
       </div>
-      <div className='challenge-box' style={{marginRight:'5%', display:'flex', flexDirection:'column', justifyContent:'center'}}>
-        <button onClick={() => openModal()} style={{cursor:'pointer',border:'1px solid #3596ff', borderRadius:'3px', width:'150px', color:'white',background:'linear-gradient(#35a7ff, #38618C 150%)', padding:'10px', fontSize:'18px', letterSpacing:'1px', fontWeight:'bold'}}>Start New Challenge</button>
+      <div className='challenge-box' style={{width:'25%', display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}>
+        <button onClick={() => openModal()} style={{cursor:'pointer',border:'1px solid #3596ff', borderRadius:'3px', width:'200px', color:'white',background:'linear-gradient(#35a7ff, #38618C 150%)', padding:'10px', fontSize:'18px', letterSpacing:'1px', fontWeight:'bold'}}>Start New Challenge</button>
       </div>
     </section>
   )
@@ -156,27 +156,28 @@ Namebar.propTypes = {
   openModal: PropTypes.func.isRequired
 }
 
-const ProfileInfo = ({profile}) => {
+const ProfileInfo = ({profile, userChallenges}) => {
   return (
     <div style={{height:'100%', width:'100%'}}>
       <img src={profile.avatar150 ? profile.avatar150 : './app/images/penguin-avatar.jpeg'} style={{borderRadius:'100px', border:'2px solid #35a7ff', marginTop:'-90px'}}/>
+
       <div style={{marginTop:'25px'}}>
         {profile.stripe_connected ? <h2 style={{fontFamily:'Raleway'}}>Payments Connected <br/><img style={{heigh:'25px', width:'25px'}} src='./app/images/checkmark.png'/></h2> : <TakeMoney />}
       </div>
       <div className='stats' style={{display:'flex', justifyContent:'space-between', marginTop:'35px', borderBottom:'2px solid #f3f3f3', paddingBottom:'20px'}}>
         <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', marginRight:'10px'}}>
           <h2 style={{color:'#4A5153', fontWeight:'100', marginBottom:'10px', fontSize:'13px'}}>COMPLETED</h2>
-          <h2 style={{color:'#35a7ff', fontSize:'23px', letterSpacing:'2px'}}>21</h2>
+          <h2 style={{color:'#35a7ff', fontSize:'23px', letterSpacing:'2px'}}>{userChallenges && userChallenges.filter((item)=>!item.active).length}</h2>
         </div>
         <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', marginRight:'10px'}}>
-          <h2 style={{color:'#4A5153', fontWeight:'100', marginBottom:'10px', fontSize:'13px'}}>CHAMPIONED</h2>
-          <h2 style={{color:'#35a7ff', fontSize:'23px', letterSpacing:'2px'}}>5</h2>
+          <h2 style={{color:'#4A5153', fontWeight:'100', marginBottom:'10px', fontSize:'13px'}}>ACTIVE</h2>
+          <h2 style={{color:'#35a7ff', fontSize:'23px', letterSpacing:'2px'}}>{userChallenges && userChallenges.filter((item)=>item.active).length}</h2>
         </div>
       </div>
-      <div className='Earnings' style={{marginTop:'25px',display:'flex', flexDirection:'column', alignItems:'flex-start', borderBottom:'2px solid #f3f3f3', paddingBottom:'25px'}}>
+      {/* <div className='Earnings' style={{marginTop:'25px',display:'flex', flexDirection:'column', alignItems:'flex-start', borderBottom:'2px solid #f3f3f3', paddingBottom:'25px'}}>
         <h2 style={{color:'#4A5153', fontWeight:'100', marginBottom:'10px', fontSize:'13px'}}>EARNINGS</h2>
         <h2 style={{color:'#35a7ff', fontSize:'23px', letterSpacing:'2px'}}>$1,000</h2>
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -271,25 +272,25 @@ console.log(this.state.userChallenges)
         <BannerTop/>
         <div className='lower-container' style={{height:'90%', width:'100%', display:'flex'}}>
           <div className='left-body' style={{width:'15%', minWidth:'150px',height:'100%',textAlign:'center', backgroundColor:'#F8F8F8', borderRight:'1px solid #f3f3f3', padding:'35px'}}>
-            <ProfileInfo profile={this.state.profile}/>
+            <ProfileInfo profile={this.state.profile} userChallenges={this.state.userChallenges}/>
           </div>
           <div className='right-body' style={{width:'85%'}}>
             <Namebar profile={this.state.profile} openModal={this.openModal}/>
             <div className='lower-right'style={{height:'85%', display:'flex'}}>
-              <div className='lower-right-left' style={{height:'100%', width:'75%', minWidth:'450px', borderRight:'1px solid #f3f3f3', overflow:'scroll'}}>
+              <div className='lower-right-left' style={{height:'100%', width:'100%', minWidth:'450px', borderRight:'1px solid #f3f3f3', overflow:'scroll'}}>
                 <LastSync lastSync={this.state.lastSync}/>
                 <CurrentChallenges userChallenges={this.state.userChallenges}/>
               </div>
-              <div className='lower-right-right' style={{height:'100%', width:'25%', minWidth:'200px', backgroundColor:'#F8F8F8'}}>
+              {/* <div className='lower-right-right' style={{height:'100%', width:'25%', minWidth:'200px', backgroundColor:'white'}}>
 
-                <div className='box' style={{padding:'20px', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                <div className='box' style={{paddingTop:'20px', display:'flex', flexDirection:'column', alignItems:'center'}}>
                   <h2 style={{fontFamily:'Raleway', color:'#4A5153', marginBottom:'15px'}}>STAY MOTIVATED</h2>
-                  <img src='./app/images/watercolor splash black.png' style={{width:'200px', marginBottom:'15px'}}/>
-                  <img src='./app/images/watercolor splash black.png' style={{width:'200px', marginBottom:'15px'}}/>
+                  <img src='./app/images/watercolor splash black.png' style={{width:'200px', marginBottom:'15px',borderRadius:'50%'}}/>
+                  <img src='./app/images/watercolor splash black.png' style={{width:'200px', marginBottom:'15px',borderRadius:'50%'}}/>
                 </div>
 
 
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

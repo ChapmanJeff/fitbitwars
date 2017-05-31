@@ -161,6 +161,8 @@ app.get('/api/fitbit-notifications', (req, res) => {
     res.status(404).send(req.query);
   }
 })
+
+//recieves notifications from fitbit subscriptions anytime they sync. this takes post notif and grabs and updates data from user notif is for
 app.post('/api/fitbit-notifications', (req, res) => {
   res.status(204).send();
   console.log(1,'Notif ', req.body);
