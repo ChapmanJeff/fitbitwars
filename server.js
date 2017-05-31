@@ -83,7 +83,8 @@ app.get('/auth/fitbit',
 ));
 
 app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
-        successRedirect: 'http://localhost:8080/profile',
+        // successRedirect: 'http://localhost:8080/profile',
+        successRedirect: 'http://fitbitwars.azurewebsites.net/profile',
         failureRedirect: '/auth/fitbit/failure'
 }));
 
@@ -95,13 +96,15 @@ function isAuthed (req, res, next) {
       next();
     } else {
       console.log('Please Log In')
-      res.redirect('http://localhost:8080');
+      // res.redirect('http://localhost:8080');
+      res.redirect('http://fitbitwars.azurewebsites.net');
     }
 }
 
 app.get('/auth/logout', (req, res) => {
   req.logout();
-  res.redirect('http://localhost:8080');
+  // res.redirect('http://localhost:8080');
+  res.redirect('http://fitbitwars.azurewebsites.net');
 })
 
 const profileCtrl = require('./api/controllers/profileCtrl');
