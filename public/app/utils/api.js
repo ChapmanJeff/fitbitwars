@@ -83,6 +83,17 @@ module.exports = {
     })
   },
 
+//Get needed info for the single challenges UI page for each of the users
+  getChallengeUsersInfo(id){
+    return axios.get(`/api/getChallengeUsersInfo?id=${id}`)
+      .then((response)=> {
+        return response.data;
+      })
+      .catch((error)=> {
+        console.log(error)
+      })
+  },
+  
   test() {
     return axios.get('/api/test')
     .then((response)=> {

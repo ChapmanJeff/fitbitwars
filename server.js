@@ -72,7 +72,7 @@ passport.serializeUser((user, done)=>
 )
 
 passport.deserializeUser((user, done) => {
-  db.profile.findOne({user_id: '3QWD5T2'}, (err, user)=>{
+  db.profile.findOne({user_id: user}, (err, user)=>{
     return done(null, user);
   })
 })
@@ -123,7 +123,8 @@ app.get('/api/getPlayers', sqlService.getPlayers)
 app.delete('/api/removePlayerFromChallenge', sqlService.removePlayerFromChallenge)
 //From Individual challenge page. After clicking Join Challenge, challenge_id is sent to sqlService to add user to challenge
 app.post('/api/addPlayerToChallenge', sqlService.addPlayerToChallenge)
-
+//get days achieved and failed as well as amount paid amounts for single challenge page
+app.get('/api/getChallengeUsersInfo', sqlService.getChallengeUsersInfo)
 
 
 //*****TEST API****//
@@ -185,7 +186,7 @@ const stripeController = require('./api/controllers/stripeController');
 app.post('/api/stripeToken', stripeController.createCustomer)
 
 //To Test Charges uncomment below:
-// stripeController.chargeCustomer("3QWD5T", 1000, "This is a test")
+// stripeController.chargeCustomer("3QWD5T", 1000, "This is a test").then((res)=>{console.log(res.paid)})
 
 
 
@@ -195,7 +196,7 @@ const cronjob = require('./api/controllers/cronjob')
 app.get('/api/test', (req, res)=>{
   cronjob.dailyUpdate()
   .then((allChallenges)=> {
-    console.log(10, allChallenges)
+    // console.log(10, allChallenges)
     res.send(allChallenges)
   })
 })
@@ -203,7 +204,7 @@ app.get('/api/test', (req, res)=>{
 var job = new CronJob('*/10 * * * * *', ()=>{
     cronjob.dailyUpdate()
       .then((allChallenges)=> {
-        console.log(10, allChallenges)
+        // console.log(10, allChallenges)
         res.send(allChallenges)
       })
   },
@@ -211,6 +212,22 @@ var job = new CronJob('*/10 * * * * *', ()=>{
   false,
   'America/Los_Angeles'
 );
+
+
+
+
+
+// db.run("select * from activity_summary where user_id = $1 and date = $2",['3QWD5T', '2017-05-28'], (dbErr, dbRes)=>{
+//   console.log(3, dbErr,dbRes)
+//   if (dbErr) {
+//     console.log(dbErr)
+//     dfd.reject(new Error(dbErr))
+//   } else {
+//     var result = dbRes[0]
+//     console.log(result)
+//   }
+// })
+
 
 console.log(moment('2017-05-28').format('YYYY-MM-D'), moment().format('YYYY-MM-D'), moment('2017-05-28').format('YYYY-MM-D') < moment().format('YYYY-MM-D'))
 app.listen(port, () => console.log(`listening on port ${port}`));

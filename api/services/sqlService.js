@@ -4,6 +4,38 @@ const request = require('request');
 const q = require('q');
 const moment = require('moment');
 
+function updateCurrentPayout(id) {
+  var dfd = q.defer();
+    findSum(id)
+      .then((sum)=>{
+        db.challenges.save({
+          challenge_id: id,
+          current_payout: sum
+        }, (dbErr, dbRes)=> {
+          if (dbErr) {
+            console.log('SAVE SUM ERROR', dbErr)
+          } else {
+            console.log('SAVE SUM', dbRes)
+            dfd.resolve(dbRes)
+          }
+        })
+      })
+  return dfd.promise;
+}
+
+function findSum(id) {
+  var dfd = q.defer();
+    db.run("select SUM(amount_paid) from challenge_users where challenge_id = $1",[id], (dbErr, dbRes)=> {
+      if (dbErr) {
+        console.log('FindSUm ERROR',dbErr)
+      } else {
+        console.log('FIND SUM', dbRes[0].sum)
+        dfd.resolve(dbRes[0].sum)
+      }
+    })
+  return dfd.promise;
+}
+
 module.exports = {
 
   getAccessToken (user_id) {
@@ -257,7 +289,10 @@ module.exports = {
         //Now take the new challenge and make creator a user in the challenge_users table
         db.challenge_users.save({
           challenge_id: dbRes.challenge_id,
-          user_id: dbRes.created_by
+          user_id: dbRes.created_by,
+          name: req.user.displayname,
+          avatar: req.user.avatar150,
+          days_achieved: 0
         }, (dbErr, dbRes)=> {
           if (dbErr) {
             console.log('dbErr saveChallengeUserErr', dbErr)
@@ -273,7 +308,7 @@ module.exports = {
 
 //Calls to DB and pulls challenge info for challeges user has joined using an sql join table sends results to front
   getUserChallenges(req, res) {
-    db.run("select * from challenges inner join challenge_users on challenge_users.challenge_id = challenges.challenge_id where challenge_users.user_id = $1 and challenges.active = 'true' order by challenges.start_date asc"
+    db.run("select * from challenges inner join challenge_users on challenge_users.challenge_id = challenges.challenge_id where challenge_users.user_id = $1  order by challenges.active desc, challenges.start_date"
     ,[req.user.user_id], (dbErr, dbRes)=> {
       if (dbErr) {
         console.log('dbErr getUserChallengesErr', dbErr)
@@ -304,13 +339,16 @@ module.exports = {
 
   //Take challenge ID and get challenge info from DB and return
   getChallengeInfo (req, res) {
-    db.run("select * from challenges where challenge_id = $1", [req.query.id],(dbErr, dbRes)=> {
-      if (dbErr) {
-        res.status(500).send(new Error(dbErr))
-      } else {
-        res.status(200).send(dbRes)
-      }
-    })
+    updateCurrentPayout(req.query.id)
+      .then((update)=>{
+        db.run("select * from challenges where challenge_id = $1", [req.query.id],(dbErr, dbRes)=> {
+          if (dbErr) {
+            res.status(500).send(new Error(dbErr))
+          } else {
+            res.status(200).send(dbRes)
+          }
+        })
+      })
   },
 
   // Fetch players in a specific challenge and if current user is in challenge add boolean true property
@@ -357,7 +395,10 @@ module.exports = {
     console.log(111, req.body.id, req.user.user_id)
     db.challenge_users.save({
       challenge_id: req.body.id,
-      user_id: req.user.user_id
+      user_id: req.user.user_id,
+      name: req.user.displayname,
+      avatar: req.user.avatar150,
+      days_achieved: 0
     }, (dbErr, dbRes)=>{
       if (dbErr) {
         console.log(222,dbErr)
@@ -369,4 +410,27 @@ module.exports = {
     })
   },
 
+  getChallengeUsersInfo(req, res) {
+    db.run("select * from challenge_users where challenge_id = $1 order by days_achieved desc",[req.query.id], (dbErr, dbRes) =>{
+      if (dbErr) {
+        console.log('dbErr challengeUsesInfo', dbErr)
+        res.status(500).send(new Error(dbErr))
+      } else {
+        // console.log('dbRes challengeUsesInfo', dbRes)
+        res.status(200).send(dbRes);
+      }
+    })
+  }
+
 }
+
+
+
+// if (moment(array[0].endDate).format('YYYY-MM-D') < moment().format('YYYY-MM-D')) {
+//   console.log('CHALLENGE EXPIRED', array[0].end_date, array[0].challenge_id)
+//   this.endChallenge(array[0])
+//     .then((res)=> {
+//       console.log('BACK FROM END CHALLENGE', res)
+//       return res
+//     })
+//   }

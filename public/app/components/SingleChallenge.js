@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import queryString from 'query-string'
 import styled from 'styled-components'
 import {MainContainerWhite, BannerTop, Icon, JoinButton} from './Styles'
-import {getPlayers, getChallengeInfo, addPlayer, removePlayer,test} from '../utils/api'
+import {getPlayers, getChallengeInfo, addPlayer, removePlayer, getChallengeUsersInfo, test} from '../utils/api'
 import moment from 'moment'
 
 const H2Title = styled.h2`
@@ -18,15 +18,17 @@ const H2SubTitle =styled.h2`
   text-align: center
 `
 
-const LeaderBoard = ({players, challengeInfo}) => {
+const LeaderBoard = ({players, challengeInfo, challengeUsersInfo}) => {
+  console.log(11111111111, challengeUsersInfo)
+
   return (
     <div className='LeaderBoard-container' style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
       <h2 style={{fontFamily:'Oswald', letterSpacing:'2px', textAlign:'center', fontSize:'18px'}}>LEADER BOARD</h2>
       <div className='leaderboard-tile' style={{width:'80%', margin:'20px', border:'1px solid #f3f3f3', borderRadius:'6px', boxShadow:'0px 2px 5px 2px rgba(0, 0, 0, 0.2)'}}>
         <div className='tile-top' style={{backgroundColor:'#f8f8f8', borderBottom:'2px solid #f3f3f3', display:'flex',textAlign:'center'}}>
           <div className='top-left' style={{width:'30%', padding:'10px'}}>
-            <H2Title style={{color:'#37ce46'}}>${challengeInfo.current_payout}</H2Title>
-            <H2SubTitle>Current Payout</H2SubTitle>
+            <H2Title style={{color:'#37ce46'}}>${challengeInfo.current_payout ? challengeInfo.current_payout : 0}</H2Title>
+            <H2SubTitle>{challengeInfo.active ? 'Current Payout' : 'Payout'}</H2SubTitle>
           </div>
           <div className='top-center' style={{borderLeft:'2px solid #f3f3f3', borderRight:'3px solid #f3f3f3', width:'40%', padding:'10px'}}>
             <H2Title style={{color:'#3596ff'}}>{players.length}</H2Title>
@@ -39,57 +41,28 @@ const LeaderBoard = ({players, challengeInfo}) => {
         </div>
         <div className='tile-bottom' style={{maxHeight:'50vh', width:'100%', overflow:'scroll'}}>
 
-
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-            <div>
-              <H2Title style={{color:'red'}}>$200</H2Title>
-              <H2SubTitle>Amount Paid</H2SubTitle>
-            </div>
-          </div>
-
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-
-          <div className='player-scorecard' style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
-            <div>
-              <Icon style={{border:'2px solid #3596ff'}} src='http://www.ajc.com/rf/image_large/Pub/Web/AJC/Special%20Contents/StaffMembers/Images/QuinnC.jpg'/>
-              <h2>John W.</h2>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Achieved</H2SubTitle>
-            </div>
-            <div>
-              <H2Title>2</H2Title>
-              <H2SubTitle>Days Failed</H2SubTitle>
-            </div>
-          </div>
-
-
+          {challengeUsersInfo.map((user)=> {
+            return(
+              <div className='player-scorecard' key={user.id} style={{display:'flex', justifyContent:'space-around', alignItems:'center', paddingBottom:'15px', borderBottom:'3px dotted #f3f3f3', padding:'10px'}}>
+                <div style={{width:'25%', textAlign:'center'}}>
+                  <Icon style={{border:'2px solid #3596ff'}} src={user.avatar}/>
+                  <h2>{user.name}</h2>
+                </div>
+                <div style={{width:'25%'}}>
+                  <H2Title>{user.days_achieved ? user.days_achieved : 0}</H2Title>
+                  <H2SubTitle>Days Achieved</H2SubTitle>
+                </div>
+                <div style={{width:'25%'}}>
+                  <H2Title>{user.days_failed ? user.days_failed : 0}</H2Title>
+                  <H2SubTitle>Days Failed</H2SubTitle>
+                </div>
+                <div style={{width:'25%'}}>
+                  <H2Title style={{color:'red'}}>${user.amount_paid ? user.amount_paid : 0}</H2Title>
+                  <H2SubTitle>Amount Paid</H2SubTitle>
+                </div>
+              </div>
+            )
+          })}
 
         </div>
       </div>
@@ -99,6 +72,8 @@ const LeaderBoard = ({players, challengeInfo}) => {
 
 LeaderBoard.propTypes = {
   players: PropTypes.array.isRequired,
+  challengInfo: PropTypes.object.isRequired,
+  challengeUsersInfo: PropTypes.array.isRequired
 }
 
 const TitleGoals = ({title, challengeInfo, userIncluded, handleRemovePlayer, handleAddPlayer}) => {
@@ -174,7 +149,8 @@ class SingleChallenge extends Component {
     this.state = {
       players: [],
       challengeInfo: {},
-      userIncluded: false
+      userIncluded: false,
+      challengeUsersInfo: [],
     }
 
     this.handleRemovePlayer = this.handleRemovePlayer.bind(this);
@@ -182,7 +158,7 @@ class SingleChallenge extends Component {
   }
 
   componentDidMount () {
-    test();
+    // test();
     var challengeQueryString = queryString.parse(this.props.location.search);
     getChallengeInfo(challengeQueryString.id)
       .then((challengeInfo)=>{
@@ -202,6 +178,15 @@ class SingleChallenge extends Component {
         }
       })
     })
+    getChallengeUsersInfo(challengeQueryString.id)
+    .then((info)=> {
+      console.log('challange_users Info ', info);
+      this.setState(()=>{
+        return {
+          challengeUsersInfo: info
+        }
+      })
+    })
   }
 
   handleRemovePlayer (id) {
@@ -215,6 +200,15 @@ class SingleChallenge extends Component {
             players: playerInfo.players,
             userIncluded: playerInfo.userInChallenge
           }
+        })
+        getChallengeUsersInfo(id)
+        .then((info)=> {
+          console.log('challange_users Info ', info);
+          this.setState(()=>{
+            return {
+              challengeUsersInfo: info
+            }
+          })
         })
       })
     })
@@ -233,6 +227,15 @@ class SingleChallenge extends Component {
           }
         })
       })
+      getChallengeUsersInfo(id)
+      .then((info)=> {
+        console.log('challange_users Info ', info);
+        this.setState(()=>{
+          return {
+            challengeUsersInfo: info
+          }
+        })
+      })
     })
   }
 
@@ -245,7 +248,7 @@ class SingleChallenge extends Component {
       <MainContainerWhite>
         <BannerTop />
         <TitleGoals title={title} handleAddPlayer={this.handleAddPlayer} handleRemovePlayer={this.handleRemovePlayer} challengeInfo={this.state.challengeInfo} userIncluded={this.state.userIncluded}/>
-        <LeaderBoard players={this.state.players} challengeInfo={this.state.challengeInfo}/>
+        <LeaderBoard players={this.state.players} challengeInfo={this.state.challengeInfo} challengeUsersInfo={this.state.challengeUsersInfo}/>
       </MainContainerWhite>
     )
   }

@@ -2,7 +2,8 @@ const config = require('../../config')
 const keySecret = config.stripe.keySecret;
 const keyPublishable = config.stripe.keyPublishable;
 const stripe = require('stripe')(keySecret)
-const sqlService = require('../services/sqlService')
+const sqlService = require('../services/sqlService');
+const q = require('q')
 
 
 module.exports = {
@@ -21,6 +22,7 @@ module.exports = {
   },
 
   chargeCustomer (user_id, amount, description) {
+    var dfd = q.defer();
     console.log(user_id, amount)
     //get customerId from DB and save to variable
     //req.body needs amount $5 = 500
@@ -35,10 +37,11 @@ module.exports = {
           console.log(charge)
           sqlService.saveChargeInfo(charge, user_id)
             .then((dbRes)=>{
-              console.log(dbRes)
+              dfd.resolve(dbRes)
             })
         })
       })
+      return dfd.promise;
   }
 
 }

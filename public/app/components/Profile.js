@@ -36,14 +36,14 @@ const CurrentChallenges = ({userChallenges})=> {
             <div className='challenge-top' style={{borderBottom:'2px solid #f3f3f3', display:'flex'}}>
 
               <div className='challenge-top-left' style={{padding:'15px', width:'70%', borderRight: '2px dotted #f3f3f3', display:'flex', alignItems:'center'}}>
-                <Icon src='./app/images/icon trophy.png' style={{marginRight:'15px'}}/>
+                <Icon src={challenge.active ? './app/images/icon trophy.png' : './app/images/icon trophy completed.png'} style={{marginRight:'15px'}}/>
                 <div className='challengeNameInfo'>
                   <Link style={{textDecoration:'none', color:'black'}} to={{
                     pathname: `/challenges/challenge`,
                     search: `?id=${challenge.challenge_id}&name=${challenge.challenge_val}`
                   }}>
                   <h2 style={{fontFamily:'Raleway', fontSize:'15px'}}>{challenge.challenge_val}</h2></Link>
-                    {diffBetweenStartAndToday > 0 ? <h2 style={{color:'#ff951c', fontSize:'12px'}}>Starts in {diffBetweenStartAndToday} Hours</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}>Active - Ends {moment(challenge.end_date).format("MMM Do, YYYY")}</h2>}
+                    {challenge.active ? diffBetweenStartAndToday > 0 ? <h2 style={{color:'#ff951c', fontSize:'12px'}}>Starts in {diffBetweenStartAndToday} Hours</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}>Active - Ends {moment(challenge.end_date).format("MMM Do, YYYY")}</h2> : <h2 style={{color:'#ff951c', fontSize:'12px'}}> Ended {moment(challenge.end_date).format('MMM Do, YYYY')}</h2>}
                 </div>
               </div>
               <div className='challenge-top-right' style={{display:'flex', flexDirection:'column', justifyContent:'center', width:'30%', textAlign:'center'}}>
