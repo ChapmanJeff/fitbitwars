@@ -26,7 +26,8 @@
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",
     "react-stripe-checkout": "^2.2.5",
-    "styled-components": "^1.4.6"
+    "styled-components": "^1.4.6",
+    "webpack": "^2.6.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

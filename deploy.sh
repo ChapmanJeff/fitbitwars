@@ -118,10 +118,18 @@ if [ -e "$DEPLOYMENT_TARGET/package.json" ]; then
 fi
 
 # 4. Install client packages
-if [ -e "$DEPLOYMENT_TARGET/public/app/package.json" ]; then
-  cd "$DEPLOYMENT_TARGET/public/app"
+if [ -e "$DEPLOYMENT_TARGET/public/package.json" ]; then
+  cd "$DEPLOYMENT_TARGET/public"
   eval $NPM_CMD install --production
   exitWithMessageOnError "npm failed"
+  cd - > /dev/null
+fi
+
+# 5. Run Webpack
+if [ -e "$DEPLOYMENT_TARGET/public/webpack.config" ]; then
+  cd "$DEPLOYMENT_TARGET/public"
+  eval $NPM_CMD run build
+  exitWithMessageOnError "webpack failed"
   cd - > /dev/null
 fi
 
