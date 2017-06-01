@@ -128,7 +128,7 @@ fi
 # 5. Run Webpack
 if [ -e "$DEPLOYMENT_TARGET/public/webpack.config.js" ]; then
   cd "$DEPLOYMENT_TARGET/public"
-  eval webpack -p
+  eval node_modules/.bin/webpack 
   exitWithMessageOnError "webpack failed"
   cd - > /dev/null
 fi
