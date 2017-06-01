@@ -126,9 +126,17 @@ if [ -e "$DEPLOYMENT_TARGET/public/package.json" ]; then
 fi
 
 # 5. Run Webpack
+if [ -e "$DEPLOYMENT_TARGET/public/node_modules/react-stripe-checkout/package.json" ]; then
+  cd "$DEPLOYMENT_TARGET/public/node_modules/react-stripe-checkout"
+  eval $NPM_CMD install
+  exitWithMessageOnError "react-stripe failed"
+  cd - > /dev/null
+fi
+
+# 5. Run Webpack
 if [ -e "$DEPLOYMENT_TARGET/public/webpack.config.js" ]; then
   cd "$DEPLOYMENT_TARGET/public"
-  eval node_modules/.bin/webpack 
+  eval node_modules/.bin/webpack
   exitWithMessageOnError "webpack failed"
   cd - > /dev/null
 fi
