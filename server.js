@@ -84,7 +84,7 @@ app.get('/auth/fitbit',
 
 app.get('/auth/fitbit/callback', passport.authenticate( 'fitbit', {
         // successRedirect: 'http://localhost:8080/profile',
-        successRedirect: 'http://fitbitwars.azurewebsites.net/profile',
+        successRedirect: 'http://fitbitwars.azurewebsites.net/#/profile',
         failureRedirect: '/auth/fitbit/failure'
 }));
 
