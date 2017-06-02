@@ -55,14 +55,14 @@ module.exports = {
 
   },
 
-  updateDailyActivity (notifArr) {
-    var allUpdates = notifArr.map((notif) => {
-      // for (var i = 0; i < notifArr.length; i++) {
-      var date = notif.date;
-      var user_id = notif.ownerId;
+  updateDailyActivity (notifArr, resultsArr) {
+    var notifUpdate = (array) => {
+      var dfd = q.defer();
+
+      var date = array[0].date;
+      var user_id = array[0].ownerId;
       var daySumExists = ()=>sqlService.checkExistingDay(date, user_id).then((daySumResponse)=> daySumResponse);
       var accesstoken = ()=>sqlService.getAccessToken(user_id).then((accessTResponse)=>accessTResponse.accesstoken);
-      var dfd = q.defer();
       q.all([daySumExists(), accesstoken()]).then((qAllResponse)=>{
         console.log(111111111111111111,qAllResponse);
         fitbitService.getDailyActivity(user_id, qAllResponse[1], date)
@@ -86,9 +86,54 @@ module.exports = {
       })
       return dfd.promise;
       // } //End of FOR Loop
-    }) // End of Map
-    return q.all(allUpdates);
-  }, //End of Function
+    } // End of Map
+    return q.all([notifUpdate(notifArr)]).then((updated)=> {
+      resultsArr.push(updated[0]);
+      notifArr.shift();
+      if (notifArr.length > 0) {
+        console.log(7)
+        return this.updateDailyActivity (notifArr, resultsArr)
+      } else {
+        console.log(8)
+        return resultsArr;
+      }
+    });
+  }, 
+
+// ***** Function I would use if database connections weren't a problem:
+  //   var allUpdates = notifArr.map((notif) => {
+  //     // for (var i = 0; i < notifArr.length; i++) {
+  //     var date = notif.date;
+  //     var user_id = notif.ownerId;
+  //     var daySumExists = ()=>sqlService.checkExistingDay(date, user_id).then((daySumResponse)=> daySumResponse);
+  //     var accesstoken = ()=>sqlService.getAccessToken(user_id).then((accessTResponse)=>accessTResponse.accesstoken);
+  //     var dfd = q.defer();
+  //     q.all([daySumExists(), accesstoken()]).then((qAllResponse)=>{
+  //       console.log(111111111111111111,qAllResponse);
+  //       fitbitService.getDailyActivity(user_id, qAllResponse[1], date)
+  //       .then((fitResponse) => {
+  //         if (qAllResponse[0]) {
+  //           console.log(222222222222222222, qAllResponse[0])
+  //           sqlService.updateActivitySummary(fitResponse, qAllResponse[0].id, date)
+  //           .then((sqlResponse)=> {
+  //             console.log('sqlResponse', sqlResponse);
+  //             dfd.resolve(sqlResponse);
+  //           })
+  //         } else {
+  //           console.log(33333333333)
+  //           sqlService.insertDailySummary(fitResponse, user_id, date)
+  //           .then((sqlResponse) => {
+  //             console.log('sqlResponse', sqlResponse);
+  //             dfd.resolve(sqlResponse);
+  //           })
+  //         }
+  //       })
+  //     })
+  //     return dfd.promise;
+  //     // } //End of FOR Loop
+  //   }) // End of Map
+  //   return q.all(allUpdates);
+  // }, //End of Function
 
   updateAccessTokens (profilesArr) {
     var dfd = q.defer();

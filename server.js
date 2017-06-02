@@ -169,7 +169,8 @@ app.get('/api/fitbit-notifications', (req, res) => {
 app.post('/api/fitbit-notifications', (req, res) => {
   res.status(204).send();
   console.log(1,'Notif ', req.body);
-  fitbitCtrl.updateDailyActivity(req.body).then((response) => {
+  var results = [];
+  fitbitCtrl.updateDailyActivity(req.body, results).then((response) => {
     console.log('THE ANSWER',response);
   });
 })
