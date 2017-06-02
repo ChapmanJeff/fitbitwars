@@ -156,13 +156,13 @@ Namebar.propTypes = {
   openModal: PropTypes.func.isRequired
 }
 
-const ProfileInfo = ({profile, userChallenges}) => {
+const ProfileInfo = ({profile, userChallenges, handleStripeUpdate}) => {
   return (
     <div style={{height:'100%', width:'100%'}}>
       <img src={profile.avatar150 ? profile.avatar150 : './app/images/penguin-avatar.jpeg'} style={{borderRadius:'100px', border:'2px solid #35a7ff', marginTop:'-90px'}}/>
 
       <div style={{marginTop:'25px'}}>
-        {profile.stripe_connected ? <h2 style={{fontFamily:'Raleway'}}>Payments Connected <br/><img style={{heigh:'25px', width:'25px'}} src='./app/images/checkmark.png'/></h2> : <TakeMoney />}
+        {profile.stripe_connected ? <h2 style={{fontFamily:'Raleway'}}>Payments Connected <br/><img style={{heigh:'25px', width:'25px'}} src='./app/images/checkmark.png'/></h2> : <TakeMoney handleStripeUpdate={handleStripeUpdate}/>}
       </div>
       <div className='stats' style={{display:'flex', justifyContent:'space-between', marginTop:'35px', borderBottom:'2px solid #f3f3f3', paddingBottom:'20px'}}>
         <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', marginRight:'10px'}}>
@@ -199,6 +199,7 @@ class Profile extends Component {
     this.setNav = this.setNav.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.handleStripeUpdate = this.handleStripeUpdate.bind(this);
   }
 
   // Set up Navbar Links that will be sent to the App component to update Navbar. Called in Component Did Mount
@@ -212,7 +213,8 @@ class Profile extends Component {
 
   componentDidMount() {
     this.setNav();
-    getProfile().then((profile)=>{
+    getProfile()
+    .then((profile)=>{
       console.log(123, profile)
       // Send profile info back to App component and update state there
       this.props.updateProfile(profile);
@@ -239,6 +241,21 @@ class Profile extends Component {
         }
       })
     })
+  }
+
+  handleStripeUpdate() {
+    getProfile()
+    .then((profile)=>{
+      console.log(123, profile)
+      // Send profile info back to App component and update state there
+      this.props.updateProfile(profile);
+      //set state within this component
+      this.setState(()=>{
+        return {
+          profile
+        }
+      })
+    }
   }
 
   openModal() {
@@ -272,7 +289,7 @@ console.log(this.state.userChallenges)
         <BannerTop/>
         <div className='lower-container' style={{height:'90%', width:'100%', display:'flex'}}>
           <div className='left-body' style={{width:'15%', minWidth:'150px',height:'100%',textAlign:'center', backgroundColor:'#F8F8F8', borderRight:'1px solid #f3f3f3', padding:'35px'}}>
-            <ProfileInfo profile={this.state.profile} userChallenges={this.state.userChallenges}/>
+            <ProfileInfo profile={this.state.profile} userChallenges={this.state.userChallenges} handleStripeUpdate={this.handleStripeUpdate}/>
           </div>
           <div className='right-body' style={{width:'85%'}}>
             <Namebar profile={this.state.profile} openModal={this.openModal}/>
