@@ -127,7 +127,7 @@ const LastSync = ({lastSync}) => {
             <h2>Minutes</h2>
           </div>
         </div>
-        <div className='sync-date' style={{backgroundColor:'#F8F8F8', fontFamily:'Raleway', textAlign:'center', padding:'10px', borderRadius:'6px', color:'#35a7ff', fontWeight:'bold'}}>{moment(lastSync.date).format('MMMM Do YYYY')}</div>
+        <div className='sync-date' style={{backgroundColor:'#F8F8F8', fontFamily:'Raleway', textAlign:'center', padding:'10px', borderRadius:'6px', color:'#35a7ff', fontWeight:'bold'}}>{moment(lastSync.date).utc().format('MMMM Do, YYYY')}</div>
       </div>
     </div>
   )

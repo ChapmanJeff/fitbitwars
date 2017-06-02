@@ -233,9 +233,9 @@ var job = new CronJob('*/10 * * * * *', ()=>{
 //     console.log(result)
 //   }
 // })
+// console.log(moment('2017-06-02T00:00:00.000Z').utc().format('MMMM Do, YYYY'), new Date('2017-06-02T00:00:00.000Z'))
 
-
-console.log(moment('2017-05-28').format('YYYY-MM-D'), moment().format('YYYY-MM-D'), moment('2017-05-28').format('YYYY-MM-D') < moment().format('YYYY-MM-D'))
+// console.log(moment('2017-05-28').format('YYYY-MM-D'), moment().format('YYYY-MM-D'), moment('2017-05-28').format('YYYY-MM-D') < moment().format('YYYY-MM-D'))
 app.listen(port, () => console.log(`listening on port ${port}`));
 
 
