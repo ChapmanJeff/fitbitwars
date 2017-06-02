@@ -255,7 +255,7 @@ class Profile extends Component {
           profile
         }
       })
-    }
+    })
   }
 
   openModal() {
