@@ -15,6 +15,7 @@ module.exports = {
       email: token.email,
       source: token.id
     }).then(customer =>{
+      console.log('now save customer info')
       sqlService.saveStripeCustomer(customer, req.user.user_id)
       .then((result)=>{
         console.log('saveStripeCustomer dot then',result)

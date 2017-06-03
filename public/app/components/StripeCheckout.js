@@ -36,12 +36,13 @@ class TakeMoney extends Component {
     this.state= {
 
     }
-
+    this.onToken - this.onToken.bind(this);
   }
 
   onToken (token) {
     console.log('TOKEN STRIPE', token)
-    return axios.post('/api/stripeToken', {token}).then((tokenRes) => {
+    return axios.post('/api/stripeToken', {token})
+    .then((tokenRes) => {
       console.log(tokenRes, 'here', this.props.handleStripeUpdate)
       alert(`We are in business, ${tokenRes.token.email}`)
       this.props.handleStripeUpdate();
