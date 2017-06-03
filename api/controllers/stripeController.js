@@ -15,7 +15,8 @@ module.exports = {
       email: token.email,
       source: token.id
     }).then(customer =>{
-      sqlService.saveStripeCustomer(customer, req.user.user_id).then((result)=>{
+      sqlService.saveStripeCustomer(customer, req.user.user_id)
+      .then((result)=>{
         console.log('saveStripeCustomer dot then',result)
         res.status(200).send("Customer Created and Saved to DB")
       })

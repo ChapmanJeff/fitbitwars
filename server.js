@@ -179,7 +179,8 @@ app.post('/api/fitbit-notifications', (req, res) => {
 function updateTokens () {
   console.log("UPDATING Access Tokens")
   db.run("select * from profile", (dbErr, profilesArr)=> {
-    fitbitCtrl.updateAccessTokens(profilesArr).then((response) =>
+    var result = []
+    fitbitCtrl.updateAccessTokens(profilesArr, result).then((response) =>
       console.log('FINISHED UPDATING TOKENS', response)
     )
   })

@@ -98,7 +98,7 @@ module.exports = {
         return resultsArr;
       }
     });
-  }, 
+  },
 
 // ***** Function I would use if database connections weren't a problem:
   //   var allUpdates = notifArr.map((notif) => {
@@ -135,24 +135,55 @@ module.exports = {
   //   return q.all(allUpdates);
   // }, //End of Function
 
-  updateAccessTokens (profilesArr) {
-    var dfd = q.defer();
-      var updatedAccessTokens = () => {
-        profilesArr.map((profile) => {
-          if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().format()) {
-            console.log('True') //FOR TESTING USE < moment.utc().add(8, 'hours').format()
-            fitbitService.updateAccessCodes(profile).then((updatedRes) => {
-              sqlService.updateTokens(updatedRes).then((sqlRes) => {
-                dfd.resolve(sqlRes);
-              })
-            })
-          }else {
-            console.log('Expires at: ', moment(profile.accesstokentimestamp).utc().add(8, 'hours').format());
-            dfd.resolve(moment(profile.accesstokentimestamp).utc().utc().add(8, 'hours').format());
-          }
-        });
+  updateAccessTokens (profilesArr, resultsArr) {
+    var updatedAccessTokens = (array) => {
+      var dfd = q.defer();
+      if (moment(array[0].accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().format()) {
+        console.log('True') //FOR TESTING USE < moment.utc().add(8, 'hours').format()
+        fitbitService.updateAccessCodes(array[0]).then((updatedRes) => {
+          sqlService.updateTokens(updatedRes).then((sqlRes) => {
+            dfd.resolve(sqlRes);
+          })
+        })
+      }else {
+        console.log('Expires at: ', moment(array[0].accesstokentimestamp).utc().add(8, 'hours').format());
+        dfd.resolve(moment(array[0].accesstokentimestamp).utc().utc().add(8, 'hours').format());
       }
-      q.all(updatedAccessTokens()).then((qAllRes) => { dfd.resolve(qAllRes)});
-    return dfd.promise;
+      return dfd.promise;
+    }
+    return q.all([updatedAccessTokens(profilesArr)]).then((updated) => {
+      resultsArr.push(updated[0]);
+      profilesArr.shift();
+      if (profilesArr.length > 0) {
+        console.log(7)
+        return this.updateAccessTokens(profilesArr, resultsArr)
+      } else {
+        console.log(8)
+        return resultsArr;
+      }
+    });
   }
+
+  //
+  //
+  //
+  //   var dfd = q.defer();
+  //     var updatedAccessTokens = () => {
+  //       profilesArr.map((profile) => {
+  //         if (moment(profile.accesstokentimestamp).utc().add(7, 'hours').format() < moment.utc().format()) {
+  //           console.log('True') //FOR TESTING USE < moment.utc().add(8, 'hours').format()
+  //           fitbitService.updateAccessCodes(profile).then((updatedRes) => {
+  //             sqlService.updateTokens(updatedRes).then((sqlRes) => {
+  //               dfd.resolve(sqlRes);
+  //             })
+  //           })
+  //         }else {
+  //           console.log('Expires at: ', moment(profile.accesstokentimestamp).utc().add(8, 'hours').format());
+  //           dfd.resolve(moment(profile.accesstokentimestamp).utc().utc().add(8, 'hours').format());
+  //         }
+  //       });
+  //     }
+  //     q.all(updatedAccessTokens()).then((qAllRes) => { dfd.resolve(qAllRes)});
+  //   return dfd.promise;
+  // }
 }
