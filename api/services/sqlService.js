@@ -190,7 +190,6 @@ module.exports = {
 
   saveStripeCustomer (customer, user_id) {
     var dfd = q.defer();
-    return dfd.promise;
     console.log("IN SQL SERVICE",customer.id, customer.email, user_id)
     db.profile.save({
       user_id: user_id,
@@ -217,6 +216,7 @@ module.exports = {
         dfd.resolve(dbRes);
       }
     })
+    return dfd.promise;
   },
 
   findStripeCustomer (user_id) {
