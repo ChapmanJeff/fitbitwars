@@ -244,6 +244,7 @@ class Profile extends Component {
   }
 
   handleStripeUpdate() {
+    console.log('updating')
     getProfile()
     .then((profile)=>{
       console.log(123, profile)
