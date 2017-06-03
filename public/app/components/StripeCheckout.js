@@ -45,8 +45,11 @@ class TakeMoney extends Component {
     .then((tokenRes) => {
       console.log(tokenRes, 'here', this.props.handleStripeUpdate)
       alert(`We are in business, ${tokenRes.token.email}`)
-      this.props.handleStripeUpdate();
+      return this.props.handleStripeUpdate();
       })
+    .catch((error)=> {
+      console.log(error)
+    })
   }
 
 
