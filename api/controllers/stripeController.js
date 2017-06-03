@@ -9,13 +9,15 @@ const q = require('q')
 module.exports = {
 
   createCustomer (req, res) {
-    let token = req.body.token;
 
+    let token = req.body.token;
+    console.log(req.body, 'BODY')
+    console.log('TOKEN IN FRONT', token)
     stripe.customers.create({
       email: token.email,
       source: token.id
-    }).then(customer =>{
-      console.log('now save customer info')
+    }).then((customer) => {
+      console.log('now save customer info: ', customer)
       sqlService.saveStripeCustomer(customer, req.user.user_id)
       .then((result)=>{
         console.log('saveStripeCustomer dot then',result)
